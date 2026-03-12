@@ -7,9 +7,9 @@ import { Component } from '@angular/core';
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  tituloHeader = 'Youtube Atualizado';
+  exibirBusca = false;
 
-  atualizarTitulo() {
-    this.tituloHeader
+  alternarBusca() {
+    this.exibirBusca = !this.exibirBusca;
   }
 }
