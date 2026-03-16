@@ -1,1 +1,32 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  /* Fundo principal - Levemente acinzentado para não cansar a vista */
+  --bg-body: #f1f5f9; 
+  
+  /* Superfícies (Cards, Modais) - Branco quase puro para contraste suave */
+  --bg-card: #ffffff;
+  
+  /* Sidebar/Navegação - Um azul marinho profundo para autoridade visual */
+  --bg-sidebar: #0f172a;
+  --text-sidebar: #f8fafc;
+
+  /* Tipografia - Evite o preto puro (#000). Use Slate para suavizar */
+  --text-main: #1e293b;    /* Cinza escuro azulado */
+  --text-muted: #64748b;   /* Texto secundário */
+  
+  /* Cores de Destaque (Brand Colors) - Tons de Indigo/Royal Blue */
+  --primary: #4f46e5;
+  --primary-light: #eef2ff;
+  --primary-hover: #4338ca;
+
+  /* Bordas e Divisores - Sutis para não poluir o layout */
+  --border: #e2e8f0;
+  
+  /* Cores Semânticas */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+
+  /* Sombras (Shadows) - Suaves e naturais */
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}

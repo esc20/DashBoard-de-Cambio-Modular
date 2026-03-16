@@ -12,10 +12,10 @@
         </ul>
     </nav>
 
-    <div class="search-container">
+    <div class="search-container" [class.aberto]="exibirBusca">
         <i class="fa-solid fa-magnifying-glass" (click)="alternarBusca()"></i>
 
-        <div class="search-bar" *ngIf="exibirBusca">
+        <div class="search-bar">
          <input type="text" placeholder="Buscar...">
         </div>
     </div>
@@ -23,10 +23,3 @@
     
 </header>
 
-<body>
-
-</body>
-
-<footer>
-
-</footer>
