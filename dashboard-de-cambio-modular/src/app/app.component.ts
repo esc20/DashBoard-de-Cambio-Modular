@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { ContentComponent } from './components/content/content.component';
+import { CardsMundiComponent } from './components/cards-mundi/cards-mundi.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, ContentComponent],
+  imports: [RouterOutlet, HeaderComponent, ContentComponent, CardsMundiComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

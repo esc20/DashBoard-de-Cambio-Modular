@@ -1,4 +1,3 @@
-/* You can add global styles to this file, and also import other style files */
 :root {
   /* Fundo principal - Levemente acinzentado para não cansar a vista */
   --bg-body: #f1f5f9; 
@@ -11,6 +10,7 @@
   --text-sidebar: #f8fafc;
 
   /* Tipografia - Evite o preto puro (#000). Use Slate para suavizar */
+  --background-main: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px);
   --text-main: #1e293b;    /* Cinza escuro azulado */
   --text-muted: #64748b;   /* Texto secundário */
   
@@ -29,4 +29,8 @@
 
   /* Sombras (Shadows) - Suaves e naturais */
   --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+}
+
+body {
+  background-color: var(--bg-body);
 }
