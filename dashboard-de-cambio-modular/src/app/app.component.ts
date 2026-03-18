@@ -2,14 +2,14 @@ import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './components/header/header.component';
 import { ContentComponent } from './components/content/content.component';
-import { CardsMundiComponent } from './components/cards-mundi/cards-mundi.component';
+import { CardComponent } from './components/card/card.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, HeaderComponent, ContentComponent, CardsMundiComponent],
+  imports: [RouterOutlet, HeaderComponent, ContentComponent, CardComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'dashboard-de-cambio-modular teste';
+  
 }
