@@ -1,6 +1,15 @@
 .card-container {
     width: 400px;
-    height: 100px;
-    background-color: var(--bg-card);
+    height: 200px;
+    background-color: rgba(0, 0, 0, 0.548);
     border-radius: 18px;
+}
+
+.flag-around {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #eee;
+    display: block;
 }
