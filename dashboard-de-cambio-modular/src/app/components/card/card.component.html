@@ -1,4 +1,53 @@
-<div class="card-container">
-  <h3>{{ titulo }}</h3>
-  <p>Câmbio: {{ valor }}</p>
+<div class="card-financeiro">
+  <div class="linha-moeda" *ngFor="let m of moedas">
+    
+    <!-- A Div redonda à esquerda -->
+    <div class="flag-container">
+      <img [src]="m.bandeira" [alt]="m.nome">
+    </div>
+
+    <!-- Informações da Moeda ao lado -->
+    <div class="info-pais">
+      <span class="nome">{{ m.nome }}</span>
+    </div>
+
+    <!-- Valor no meio -->
+    <div class="valor">
+      {{ m.valor | currency:'BRL' }}
+    </div>
+
+    <!-- Ponto luminoso na direita -->
+    <div class="indicador">
+      <span class="ponto-luz" [ngClass]="m.tendencia"></span>
+    </div>
+
+  </div>
+</div>
+
+<div class="card-tendencia-mundial">
+  <p>Card Tendencia mundial</p>
+</div>
+
+<div class="ciclo-de-juros">
+  <p>Ciclo de Juros</p>
+</div>
+
+<div class="sentimento-do-mercado">
+   <p>Sentimento do mercado</p>
+</div>
+
+<div class="mapa-mundi">
+  <p>Mapa mundi</p>
+</div>
+
+<div class="vlume-por-ativo">
+  <p>Volume por ativo</p>
+</div>
+
+<div class="Relatorio-de-fecho">
+  <p>Relatorio de Fecho</p>
+</div>
+
+<div class="Noticias-de-ultima-hora">
+  <p>Noticias de ultima hora</p>
 </div>

@@ -1,15 +1,112 @@
-.card-container {
-    width: 400px;
-    height: 200px;
-    background-color: rgba(0, 0, 0, 0.548);
-    border-radius: 18px;
+
+.card-financeiro {
+  width: 300px;
+  height: 390px;
+  background-color: aqua;
+  border-radius: 25px;
+  padding-left: 15px;
+  margin-left: 20px;
+  margin-top: 40px;
 }
 
-.flag-around {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 2px solid #eee;
-    display: block;
+
+
+.linha-moeda {
+  display: flex;
+  align-items: center;
+  gap: 15px; 
+  padding: 12px 0;
+
+  .flag-container {
+    width: 35px;        
+    height: 35px;          
+    border-radius: 50%;    
+    overflow: hidden;      
+    display: flex;         
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #444; 
+    flex-shrink: 0;        
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;   
+    }
+  }
+
+  .info-pais {
+    display: flex;
+    flex-direction: column; 
+    
+    .nome {
+      font-weight: bold;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+.card-tendencia-mundial {
+    width: 620px;
+    height: 180px;
+    background-color: gray;
+    margin-left: 400px;
+    border-radius: 12px;
+    margin-top: -195px;
+    
+}
+
+.ciclo-de-juros {
+    width: 300px;
+    height: 190px;
+    background-color: gray;
+    margin-left: 400px;
+    border-radius: 12px;
+    margin-top: -408px;
+}
+
+.sentimento-do-mercado {
+    width: 300px;
+    height: 190px;
+    background-color: gray;
+    border-radius: 12px;
+    margin-top: -208px;
+    margin-left: 720px;
+}
+
+.mapa-mundi {
+    width: 900px;
+    height: 390px;
+    background-color: gray;
+    border-radius: 12px;
+    margin-top: 260px;
+    margin-left: 70px;
+}
+
+.vlume-por-ativo {
+    width: 1000px;
+    height: 220px;
+    background-color: gray;
+    border-radius: 12px;
+    margin-top: 40px;
+    margin-left: 30px;
+}
+
+.Relatorio-de-fecho {
+    width: 220px;
+    height: 330px;
+    background-color: yellow;
+    margin-left: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+      
+}
+
+.Noticias-de-ultima-hora {
+    width: 770px;
+    height: 330px;
+    background-color: yellow;
+    margin-left: 265px;
+    border-radius: 12px;
+    margin-top: -346px;
 }
