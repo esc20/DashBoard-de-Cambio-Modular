@@ -10,10 +10,6 @@ import { HttpClient} from '@angular/common/http';
   styleUrl: './card.component.scss'
 })
 export class CardComponent {
-  private http = inject(HttpClient);
-
-  private readonly API_KEY = 'SUA_CHAVE_AQUI';
-  private readonly API_URL = 'https://v6.exchangerate-api.com/v6/${this.API_KEY}/latest/BRL'
 
    moedas =  [
     { nome: 'Brasil', sigla: 'BRL', valor: 1.00, tendencia: 'estavel', bandeira: 'Flag_of_Brazil.svg' },
