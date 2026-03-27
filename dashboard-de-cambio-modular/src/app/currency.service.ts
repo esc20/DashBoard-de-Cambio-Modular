@@ -1,22 +1,26 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
 
+export interface CurrencyData {
+  nome: string;
+  sigla: string;
+  valor: number;
+  imagem: string;
+}
 
+  
 @Injectable({
   providedIn: 'root'
 })
 export class CurrencyService {
-  private http = inject(HttpClient);
+  private readonly _httpClient = inject(HttpClient);
 
   
-  private readonly API_KEY = 'YOUR_API_KEY'; 
-  private readonly BASE_URL = `https://v6.exchangerate-api.com/v6/${this.API_KEY}/latest/USD`;
+ getPost(): Observable<CurrencyData[]> {
+  return this._httpClient.get<CurrencyData[]>('https://v6.exchangerate-api.com/v6/c1e5adfaf186943bf9b2e50f/latest/USD');
+ }
 
   
-  getExchangeRates(): Observable<any> {
-    return this.http.get(this.BASE_URL).pipe(
-      map((response: any) => response.conversion_rates)
-    );
-  }
+  
 }

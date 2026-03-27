@@ -1,28 +1,31 @@
 <div class="card-financeiro">
-  <div class="linha-moeda" *ngFor="let m of moedas">
+  @for (post of postsList; track post.valor) {
+  <div class="linha-moeda">
     
     <!-- A Div redonda à esquerda -->
     <div class="flag-container">
-      <img [src]="m.bandeira" [alt]="m.nome">
+      <img [src]="" [alt]="">
     </div>
 
     <!-- Informações da Moeda ao lado -->
     <div class="info-pais">
-      <span class="nome">{{ m.nome }}</span>
+      <span class="nome"></span>
     </div>
 
     <!-- Valor no meio -->
     <div class="valor">
-      {{ m.valor | currency:'BRL' }}
+      {{ post.valor }}
     </div>
 
     <!-- Ponto luminoso na direita -->
     <div class="indicador">
-      <span class="ponto-luz" [ngClass]="m.tendencia"></span>
+      <span class="ponto-luz" [ngClass]=""></span>
     </div>
 
   </div>
+} 
 </div>
+
 
 <div class="card-tendencia-mundial">
   <p>Card Tendencia mundial</p>
@@ -51,3 +54,4 @@
 <div class="Noticias-de-ultima-hora">
   <p>Noticias de ultima hora</p>
 </div>
+  

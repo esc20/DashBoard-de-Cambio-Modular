@@ -1,6 +1,8 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient} from '@angular/common/http';
+import { CurrencyData, CurrencyService } from '../../currency.service';
+
+
 
 @Component({
   selector: 'app-card',
@@ -9,7 +11,20 @@ import { HttpClient} from '@angular/common/http';
   templateUrl: './card.component.html',
   styleUrl: './card.component.scss'
 })
-export class CardComponent {
+export class CardComponent  {
+    postsList: CurrencyData[] = [];
+
+    readonly _currencyService = inject(CurrencyService);
+
+    ngOnInit() {
+      this._currencyService.getPost().subscribe(
+        (response) => { 
+          console.log('Response: ', response); 
+
+          this.postsList = response
+        }
+      )
+    }
 
    moedas =  [
     { nome: 'Brasil', sigla: 'BRL', valor: 1.00, tendencia: 'estavel', bandeira: 'Flag_of_Brazil.svg' },
