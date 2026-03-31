@@ -1,5 +1,5 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DecimalPipe } from '@angular/common';
 import {CurrencyService, ExchangeRateResponse } from '../../currency.service';
 
 
@@ -13,38 +13,55 @@ import {CurrencyService, ExchangeRateResponse } from '../../currency.service';
     </div>
   `
 })
-export class CardComponent implements OnInit {
+export class AppComponent implements OnInit {
   private readonly _currencyService = inject(CurrencyService);
+  private readonly _decimalPipe = inject(DecimalPipe);
 
-  // Usando Signal para melhor performance (opcional, mas recomendado no Angular 18+)
-  moedas = signal([
-    { nome: 'Brasil', sigla: 'BRL', valor: 0, tendencia: 'estavel', bandeira: 'Flag_of_Brazil.svg' },
-    { nome: 'EUA', sigla: 'USD', valor: 1.00, tendencia: 'subindo', bandeira: 'Flag_of_the_United_States.svg' },
-    { nome: 'Japão', sigla: 'JPY', valor: 0, tendencia: 'caindo', bandeira: 'Flag_of_Japan.svg' },
-    { nome: 'Alemanha', sigla: 'EUR', valor: 0, tendencia: 'caindo', bandeira: 'Flag_of_Germany.svg.png' },
-    { nome: 'Grã-Bretanha', sigla: 'GBP', valor: 0, tendencia: 'estavel', bandeira: 'Flag_of_Great_Britain.png'},
-    { nome: 'China', sigla: 'CNY', valor: 0, tendencia: 'subindo', bandeira: 'Flag_of_China.jpg'} 
+  // Lista de moedas inicializada como Signal
+  moedas = signal<MoedaInfo[]>([
+    { nome: 'Brasil', sigla: 'BRL', valor: 0, tendencia: 'estavel', bandeira: 'br' },
+    { nome: 'EUA', sigla: 'USD', valor: 1.00, tendencia: 'estavel', bandeira: 'us' },
+    { nome: 'Japão', sigla: 'JPY', valor: 0, tendencia: 'estavel', bandeira: 'jp' },
+    { nome: 'Alemanha', sigla: 'EUR', valor: 0, tendencia: 'estavel', bandeira: 'eu' },
+    { nome: 'Grã-Bretanha', sigla: 'GBP', valor: 0, tendencia: 'estavel', bandeira: 'gb' },
+    { nome: 'China', sigla: 'CNY', valor: 0, tendencia: 'estavel', bandeira: 'cn' } 
   ]);
 
   ngOnInit() {
-    // Agora o 'response' terá o tipo ExchangeRateResponse automaticamente
+    this.atualizarCotacoes();
+  }
+
+  atualizarCotacoes() {
     this._currencyService.getRates().subscribe({
       next: (response: ExchangeRateResponse) => {
-        console.log('Dados recebidos com sucesso:', response);
-
-        // Atualizamos os valores comparando as siglas
         const taxas = response.conversion_rates;
         
-        this.moedas.update(listaAtual => 
-          listaAtual.map(moeda => ({
-            ...moeda,
-            valor: taxas[moeda.sigla] || moeda.valor
-          }))
+        this.moedas.update(lista => 
+          lista.map(moeda => {
+            const novoValor = taxas[moeda.sigla] || moeda.valor;
+            let novaTendencia: 'subindo' | 'caindo' | 'estavel' = 'estavel';
+
+            if (moeda.valor !== 0) {
+              if (novoValor > moeda.valor) novaTendencia = 'subindo';
+              else if (novoValor < moeda.valor) novaTendencia = 'caindo';
+            }
+
+            return { ...moeda, valor: novoValor, tendencia: novaTendencia };
+          })
         );
       },
-      error: (err) => {
-        console.error('Erro na requisição:', err);
-      }
+      error: (err) => console.error('Falha ao carregar API:', err)
     });
+  }
+
+  getFlagCode(sigla: string): string {
+    const codes: { [key: string]: string } = {
+      'BRL': 'br', 'USD': 'us', 'JPY': 'jp', 'EUR': 'eu', 'GBP': 'gb', 'CNY': 'cn'
+    };
+    return codes[sigla] || 'un';
+  }
+
+  formatarValor(valor: number): string {
+    return this._decimalPipe.transform(valor, '1.2-4') || '0.0000';
   }
 }
