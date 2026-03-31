@@ -1,57 +1,32 @@
 <div class="card-financeiro">
-  @for (post of postsList; track post.valor) {
-  <div class="linha-moeda">
-    
-    <!-- A Div redonda à esquerda -->
-    <div class="flag-container">
-      <img [src]="" [alt]="">
-    </div>
-
-    <!-- Informações da Moeda ao lado -->
-    <div class="info-pais">
-      <span class="nome"></span>
-    </div>
-
-    <!-- Valor no meio -->
-    <div class="valor">
-      {{ post.valor }}
-    </div>
-
-    <!-- Ponto luminoso na direita -->
-    <div class="indicador">
-      <span class="ponto-luz" [ngClass]=""></span>
-    </div>
-
-  </div>
-} 
-</div>
-
-
-<div class="card-tendencia-mundial">
-  <p>Card Tendencia mundial</p>
-</div>
-
-<div class="ciclo-de-juros">
-  <p>Ciclo de Juros</p>
-</div>
-
-<div class="sentimento-do-mercado">
-   <p>Sentimento do mercado</p>
-</div>
-
-<div class="mapa-mundi">
-  <p>Mapa mundi</p>
-</div>
-
-<div class="vlume-por-ativo">
-  <p>Volume por ativo</p>
-</div>
-
-<div class="Relatorio-de-fecho">
-  <p>Relatorio de Fecho</p>
-</div>
-
-<div class="Noticias-de-ultima-hora">
-  <p>Noticias de ultima hora</p>
-</div>
+  <h3>Taxas de Câmbio</h3>
   
+  <div class="lista-moedas">
+    <!-- Usamos o Signal moedas() -->
+    <div class="linha-moeda" *ngFor="let moeda of moedas()">
+      <div class="flag-container">
+        <!-- Caminho da bandeira vindo do objeto -->
+        <img [src]="'assets/bandeiras/' + moeda.bandeira" [alt]="moeda.nome" 
+             onerror="this.src='https://via.placeholder.com/35'">
+      </div>
+      
+      <div class="info-pais">
+        <span class="nome">{{ moeda.nome }}</span>
+        <span class="valor">
+          {{ moeda.sigla }}: {{ moeda.valor | number:'1.2-2' }}
+        </span>
+      </div>
+      
+      <!-- Exemplo de tendência (opcional no seu SCSS) -->
+      <span class="status" [ngClass]="moeda.tendencia">
+        {{ moeda.tendencia === 'subindo' ? '↑' : '↓' }}
+      </span>
+    </div>
+  </div>
+</div>
+
+<!-- Outros elementos do seu Dashboard conforme o SCSS fornecido -->
+<div class="card-tendencia-mundial">Tendência Mundial</div>
+<div class="ciclo-de-juros">Ciclo de Juros</div>
+<div class="sentimento-do-mercado">Sentimento do Mercado</div>
+<div class="mapa-mundi">Mapa Mundi</div>

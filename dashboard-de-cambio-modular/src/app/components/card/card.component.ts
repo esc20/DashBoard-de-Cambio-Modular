@@ -1,37 +1,50 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CurrencyData, CurrencyService } from '../../currency.service';
-
+import {CurrencyService, ExchangeRateResponse } from '../../currency.service';
 
 
 @Component({
   selector: 'app-card',
   standalone: true,
   imports: [CommonModule],
-  templateUrl: './card.component.html',
-  styleUrl: './card.component.scss'
+  template: `
+    <div *ngFor="let moeda of moedas()">
+      <p>{{ moeda.nome }} ({{ moeda.sigla }}): {{ moeda.valor | number:'1.2-2' }}</p>
+    </div>
+  `
 })
-export class CardComponent  {
-    postsList: CurrencyData[] = [];
+export class CardComponent implements OnInit {
+  private readonly _currencyService = inject(CurrencyService);
 
-    readonly _currencyService = inject(CurrencyService);
-
-    ngOnInit() {
-      this._currencyService.getPost().subscribe(
-        (response) => { 
-          console.log('Response: ', response); 
-
-          this.postsList = response
-        }
-      )
-    }
-
-   moedas =  [
-    { nome: 'Brasil', sigla: 'BRL', valor: 1.00, tendencia: 'estavel', bandeira: 'Flag_of_Brazil.svg' },
-    { nome: 'EUA', sigla: 'USD', valor: 0, tendencia: 'subindo', bandeira: 'Flag_of_the_United_States.svg' },
+  // Usando Signal para melhor performance (opcional, mas recomendado no Angular 18+)
+  moedas = signal([
+    { nome: 'Brasil', sigla: 'BRL', valor: 0, tendencia: 'estavel', bandeira: 'Flag_of_Brazil.svg' },
+    { nome: 'EUA', sigla: 'USD', valor: 1.00, tendencia: 'subindo', bandeira: 'Flag_of_the_United_States.svg' },
     { nome: 'Japão', sigla: 'JPY', valor: 0, tendencia: 'caindo', bandeira: 'Flag_of_Japan.svg' },
-    { nome: 'Alemanha', sigla: 'DEU', valor: 0, tendencia: 'caindo', bandeira: 'Flag_of_Germany.svg.png' },
-    { nome: 'Grã-Bretanha', sigla: 'UKX', valor: 0, tendencia: 'estavel', bandeira: 'Flag_of_Great_Britain_(1707–1800).svg.png'},
-    { nome: 'China', sigla: 'CHN', valor: 0, tendencias: 'subindo', bandeira: 'Flag_of_China.jpg'} 
-  ];
+    { nome: 'Alemanha', sigla: 'EUR', valor: 0, tendencia: 'caindo', bandeira: 'Flag_of_Germany.svg.png' },
+    { nome: 'Grã-Bretanha', sigla: 'GBP', valor: 0, tendencia: 'estavel', bandeira: 'Flag_of_Great_Britain.png'},
+    { nome: 'China', sigla: 'CNY', valor: 0, tendencia: 'subindo', bandeira: 'Flag_of_China.jpg'} 
+  ]);
+
+  ngOnInit() {
+    // Agora o 'response' terá o tipo ExchangeRateResponse automaticamente
+    this._currencyService.getRates().subscribe({
+      next: (response: ExchangeRateResponse) => {
+        console.log('Dados recebidos com sucesso:', response);
+
+        // Atualizamos os valores comparando as siglas
+        const taxas = response.conversion_rates;
+        
+        this.moedas.update(listaAtual => 
+          listaAtual.map(moeda => ({
+            ...moeda,
+            valor: taxas[moeda.sigla] || moeda.valor
+          }))
+        );
+      },
+      error: (err) => {
+        console.error('Erro na requisição:', err);
+      }
+    });
+  }
 }
