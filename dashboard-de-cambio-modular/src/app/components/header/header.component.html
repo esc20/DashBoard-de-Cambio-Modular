@@ -12,14 +12,14 @@
         </ul>
     </nav>
 
-    <div class="search-container" [class.aberto]="exibirBusca">
-        <i class="fa-solid fa-magnifying-glass" (click)="alternarBusca()"></i>
-
-        <div class="search-bar">
-         <input type="text" placeholder="Buscar...">
-        </div>
-    </div>
-
+    <div class="search-container" [class.aberto]="exibirBusca()">
+  <i class="fa-solid fa-magnifying-glass" (click)="alternarBusca()"></i>
+  
+  <!-- Opcional: Adicione o input para ver o efeito -->
+  @if (exibirBusca()) {
+    <input type="text" placeholder="Buscar ativo...">
+  }
+</div>
     
 </header>
 

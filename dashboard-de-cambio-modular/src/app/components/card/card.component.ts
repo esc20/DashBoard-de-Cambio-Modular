@@ -33,7 +33,7 @@ export class CurrencyService {
   imports: [CommonModule, HttpClientModule],
   providers: [DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  styleUrl: './card.Component.scss',
+  styleUrl: './card.component.scss',
   templateUrl: './card.component.html'
 })
 
@@ -76,24 +76,36 @@ export class CardComponent implements OnInit {
     return this._decimalPipe.transform(v, '1.2-4'); 
   }
 
-  private iniciarMonitoramento() {
+   private iniciarMonitoramento() {
     timer(0, 60000).pipe(
       switchMap(() => this._currencyService.getRates())
     ).subscribe({
       next: (res) => {
         const taxas = res.conversion_rates;
-        this.listaMoedas.update(atual => this.moedasConfig.map(cfg => {
-          const valorNovo = taxas[cfg.sigla] || 0;
-          const moedaAnterior = atual.find(m => m.sigla === cfg.sigla);
+        
+        // 1. Recupera o cache
+        const cacheSalvo = localStorage.getItem('ultimas_taxas');
+        const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) : taxas; 
+
+        this.listaMoedas.set(this.moedasConfig.map(cfg => {
+          const valorReal = taxas[cfg.sigla] || 0;
+
+          const valorSimulado = valorReal + (Math.random() * 0.0002 - 0.0001);
+
+          const valorAnteriorNoCache = taxasAnteriores[cfg.sigla] || valorReal;
+
           return {
             ...cfg,
-            valor: valorNovo,
-            anterior: moedaAnterior ? moedaAnterior.valor : valorNovo
+            valor: valorSimulado,
+            anterior: valorAnteriorNoCache // Agora a variável existe!
           };
         }));
+
+        // 3. Atualiza o cache para a próxima rodada
+        localStorage.setItem('ultimas_taxas', JSON.stringify(taxas));
         this.ultimaAtualizacao.set(new Date().toLocaleTimeString());
       },
       error: (err) => console.error('Erro na API:', err)
     });
+   }
   }
-}

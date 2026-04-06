@@ -1,0 +1,67 @@
+.card-sentimento {
+   position: relative;
+   background-color: gray; 
+   height: 265px;
+   width: 250px;
+   margin-top: -485px;
+   margin-left: 390px;
+   border-radius: 20px;
+   display: flex;
+   flex-direction: column;   
+   justify-content: center; 
+   align-items: center;     
+}
+
+.gauge-svg-container {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.gauge-svg {
+  transform: rotate(135deg); // Gira para a abertura ficar na base
+  width: 100%;
+  height: 100%;
+}
+
+circle {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round; // Deixa as pontas da faixa arredondadas
+  
+}
+
+.gauge-base {
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-dasharray: 215 283; // 215 é o tamanho da linha, 283 é o total
+}
+
+.gauge-progress {
+  stroke-dasharray: 215 283;
+  transition: stroke-dashoffset 1s ease-out, stroke 0.5s ease;
+}
+
+.centro-texto {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  
+  .numero {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: white;
+    line-height: 1;
+  }
+  
+  .status {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    margin-top: 5px;
+  }
+}

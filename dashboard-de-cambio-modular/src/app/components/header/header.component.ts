@@ -1,17 +1,18 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Importante para o [class.aberto]
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule], // Adicione o CommonModule aqui
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
-  exibirBusca = false;
+  // Cria o Signal para controlar a visibilidade da busca
+  exibirBusca = signal(false);
 
   alternarBusca() {
-    this.exibirBusca = !this.exibirBusca;
+    this.exibirBusca.update(valor => !valor);
   }
 }

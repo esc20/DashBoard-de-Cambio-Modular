@@ -1,0 +1,28 @@
+<div class="card-sentimento">
+  <h3 class="titulo-mini">Sentimento do Mercado</h3>
+  
+  <div class="gauge-svg-container">
+    <svg viewBox="0 0 100 100" class="gauge-svg">
+      <!-- 1. Fundo do trilho (o círculo cinza ao fundo) -->
+      <circle class="gauge-base" cx="50" cy="50" r="45"></circle>
+      
+      <!-- 2. O progresso colorido (que usa suas funções) -->
+      <circle class="gauge-progress" cx="50" cy="50" r="45"
+              [style.stroke-dashoffset]="calcularOffset()" 
+              [style.stroke]="obterCorStatus()">
+      </circle>
+    </svg>
+
+    <!-- 3. Texto centralizado no meio do arco -->
+    <div class="centro-texto">
+      <span class="numero">{{ valorSentimento() }}</span> 
+      <span class="status" [style.color]="obterCorStatus()">{{ obterStatusTexto() }}</span>
+    </div>
+  </div>
+
+  <div class="legendas">
+    <span>Medo</span>
+    <span>Neutro</span>
+    <span>Ganância</span>
+  </div>
+</div>

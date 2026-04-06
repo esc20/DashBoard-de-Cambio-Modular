@@ -1,32 +1,33 @@
 :host {
-      --primary-bg: rgba(28, 9, 36, 0.582);
-      --card-aqua: rgb(51, 233, 187);
-      --card-gray: #333;
-      --card-yellow: #ffff00;
-      display: block;
-      background-color: var(--primary-bg);
-      min-height: 100vh;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+  --primary-bg: rgba(28, 9, 36, 0.582);
+  --card-aqua: rgb(153, 145, 145);
+  --card-gray: #333;
+  --card-yellow: #ffff00;
+  display: block;
+  background-color: var(--primary-bg);
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    .dashboard-container {
-      padding: 30px;
-      color: white;
-    }
+.dashboard-container {
+  padding: 30px;  
+  color: white;
+}
 
-    /* Estilização do Card de Câmbio */
-    .card-financeiro {
-      width: 300px;
-      position: relative;
-      height: 390px;
-      background-color: var(--card-aqua);
-      border-radius: 25px;
-      padding: 20px;
-      color: #1a1a1a;
-      box-shadow: 0 10px 20px rgba(0,255,255,0.2);
-    }
+/* Estilização do Card de Câmbio */
+.card-financeiro {
+  width: 300px;
+  position: relative;
+  margin-top: 30px;
+  height: 390px;
+  background-color: var(--card-aqua);
+  border-radius: 25px;
+  padding: 20px;
+  color: #1a1a1a;
+  box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
+}
 
-    .info-container-top {
+.info-container-top {
   position: absolute;
   top: 12px;
   right: 12px;
@@ -40,13 +41,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    
+
     // Estética do Círculo
     width: 22px;
     height: 22px;
     border: 1px solid rgba(255, 255, 255, 0.5);
     border-radius: 50%; // Faz o círculo perfeito
-    
+
     font-family: serif; // O "i" fica mais elegante em fontes serifadas
     font-style: italic;
     font-size: 14px;
@@ -73,7 +74,7 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.1);
     text-align: left;
-    
+
     // Animação de entrada
     animation: fadeIn 0.2s ease-out;
   }
@@ -105,75 +106,166 @@
 
 // Animações de brilho
 @keyframes pulsar-verde {
-  0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
+  }
 }
 
 @keyframes pulsar-vermelho {
-  0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
-  70% { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 68, 68, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 68, 68, 0);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-5px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
-    
-    .card-title {
-      margin: 0 0 15px 0;
-      font-size: 1.1rem;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+
+.card-title {
+  margin: 0 0 15px 0;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.linha-moeda {
+  display: flex;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+
+  .flag-container {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .info-pais {
+    flex: 1;
+    margin-left: 12px;
+    display: flex;
+    flex-direction: column;
+
+    .nome {
+      font-weight: 700;
+      font-size: 0.85rem;
     }
 
-    .linha-moeda {
-      display: flex;
-      align-items: center;
-      padding: 8px 0;
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-
-      .flag-container {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        overflow: hidden;
-        border: 1px solid rgba(0,0,0,0.1);
-        flex-shrink: 0;
-        img { width: 100%; height: 100%; object-fit: cover; }
-      }
-
-      .info-pais {
-        flex: 1;
-        margin-left: 12px;
-        display: flex;
-        flex-direction: column;
-        .nome { font-weight: 700; font-size: 0.85rem; }
-        .sigla { font-size: 0.7rem; opacity: 0.7; }
-      }
-
-      .valor {
-        font-family: 'Courier New', Courier, monospace;
-        font-weight: bold;
-        margin-right: 10px;
-        font-size: 0.9rem;
-      }
-
-      
+    .sigla {
+      font-size: 0.7rem;
+      opacity: 0.7;
     }
+  }
 
-    /* Posicionamento dos outros cards */
-    .card-tendencia-mundial { width: 620px; height: 180px; background-color: var(--card-gray); margin-left: 400px; border-radius: 12px; margin-top: -195px; }
-    .ciclo-de-juros { width: 300px; height: 190px; background-color: var(--card-gray); margin-left: 400px; border-radius: 12px; margin-top: -408px; }
-    .sentimento-do-mercado { width: 300px; height: 190px; background-color: var(--card-gray); border-radius: 12px; margin-top: -208px; margin-left: 720px; }
-    .mapa-mundi { width: 900px; height: 390px; background-color: var(--card-gray); border-radius: 12px; margin-top: 260px; margin-left: 70px; }
-    .vlume-por-ativo { width: 1000px; height: 220px; background-color: var(--card-gray); border-radius: 12px; margin-top: 40px; margin-left: 30px; }
-    
-    .footer-row { display: flex; gap: 20px; margin-top: 20px; }
-    .Relatorio-de-fecho { width: 220px; height: 330px; background-color: var(--card-yellow); border-radius: 12px; color: black; }
-    .Noticias-de-ultima-hora { width: 770px; height: 330px; background-color: var(--card-yellow); border-radius: 12px; color: black; }
+  .valor {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 0.9rem;
+  }
 
-    p { padding: 15px; font-weight: bold; }
-    .status-text { font-size: 0.8rem; text-align: center; margin-top: 20px; }
-  
+}
+
+
+/* Posicionamento dos outros cards */
+.card-tendencia-mundial {
+  width: 620px;
+  height: 180px;
+  background-color: var(--card-gray);
+  margin-left: 400px;
+  border-radius: 12px;
+  margin-top: -195px;
+}
+
+.ciclo-de-juros {
+  width: 300px;
+  height: 190px;
+  background-color: var(--card-gray);
+  margin-left: 400px;
+  border-radius: 12px;
+  margin-top: -408px;
+}
+
+.mapa-mundi {
+  width: 900px;
+  height: 390px;
+  background-color: var(--card-gray);
+  border-radius: 12px;
+  margin-top: 260px;
+  margin-left: 70px;
+}
+
+.vlume-por-ativo {
+  width: 1000px;
+  height: 220px;
+  background-color: var(--card-gray);
+  border-radius: 12px;
+  margin-top: 40px;
+  margin-left: 30px;
+}
+
+.footer-row {
+  display: flex;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.Relatorio-de-fecho {
+  width: 220px;
+  height: 330px;
+  background-color: var(--card-yellow);
+  border-radius: 12px;
+  color: black;
+}
+
+.Noticias-de-ultima-hora {
+  width: 770px;
+  height: 330px;
+  background-color: var(--card-yellow);
+  border-radius: 12px;
+  color: black;
+}
+
+p {
+  padding: 15px;
+  font-weight: bold;
+}
+
+.status-text {
+  font-size: 0.8rem;
+  text-align: center;
+  margin-top: 20px;
+}
