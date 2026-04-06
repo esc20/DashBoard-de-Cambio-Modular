@@ -17,6 +17,7 @@
     /* Estilização do Card de Câmbio */
     .card-financeiro {
       width: 300px;
+      position: relative;
       height: 390px;
       background-color: var(--card-aqua);
       border-radius: 25px;
@@ -25,6 +26,101 @@
       box-shadow: 0 10px 20px rgba(0,255,255,0.2);
     }
 
+    .info-container-top {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  cursor: pointer;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  .info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    // Estética do Círculo
+    width: 22px;
+    height: 22px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%; // Faz o círculo perfeito
+    
+    font-family: serif; // O "i" fica mais elegante em fontes serifadas
+    font-style: italic;
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    transition: all 0.2s ease-in-out;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #fff;
+      color: #fff;
+      transform: scale(1.1); // Leve pulo ao passar o mouse
+    }
+  }
+
+  .info-tooltip {
+    margin-top: 8px;
+    width: 180px;
+    background: #2a2a2a; // Fundo escuro elegante
+    color: #eee;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+    
+    // Animação de entrada
+    animation: fadeIn 0.2s ease-out;
+  }
+}
+
+.ponto-luz {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-left: 10px;
+  transition: all 0.5s ease;
+  background-color: #666; // Cor neutra (neutro)
+  display: block;
+
+  // Quando a moeda sobe (Verde)
+  &.subindo {
+    background-color: #00ff88;
+    box-shadow: 0 0 8px #00ff88, 0 0 15px rgba(0, 255, 136, 0.5);
+    animation: pulsar-verde 2s infinite;
+  }
+
+  // Quando a moeda cai (Vermelho)
+  &.caindo {
+    background-color: #ff4444;
+    box-shadow: 0 0 8px #ff4444, 0 0 15px rgba(255, 68, 68, 0.5);
+    animation: pulsar-vermelho 2s infinite;
+  }
+}
+
+// Animações de brilho
+@keyframes pulsar-verde {
+  0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
+}
+
+@keyframes pulsar-vermelho {
+  0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+    
     .card-title {
       margin: 0 0 15px 0;
       font-size: 1.1rem;
@@ -64,16 +160,7 @@
         font-size: 0.9rem;
       }
 
-      .ponto-luz {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        display: block;
-        
-        &.positivo { background-color: #008000; box-shadow: 0 0 8px #008000; }
-        &.negativo { background-color: #ff0000; box-shadow: 0 0 8px #ff0000; }
-        &.neutro { background-color: #666; }
-      }
+      
     }
 
     /* Posicionamento dos outros cards */

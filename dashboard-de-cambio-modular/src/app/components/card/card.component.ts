@@ -1,4 +1,4 @@
-import { Component, OnInit, signal, inject, Injectable, ChangeDetectionStrategy, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, signal, inject, Injectable, ChangeDetectionStrategy, PLATFORM_ID, Signal } from '@angular/core';
 import { CommonModule, DecimalPipe, isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { Observable, retry, timer, switchMap, Subscription } from 'rxjs';
@@ -34,47 +34,22 @@ export class CurrencyService {
   providers: [DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './card.Component.scss',
-  template: `
-    <div class="card-financeiro">
-      <div class="flex justify-between items-center mb-6">
-        <h2 class="card-title">Câmbio Real-Time</h2>
-        <div class="ponto-luz positivo animate-pulse"></div>
-      </div>
-
-      <div class="space-y-2">
-        @for (moeda of listaMoedas(); track moeda.sigla) {
-          <div class="linha-moeda">
-            <div class="flag-container">
-              <img [src]="'https://flagcdn.com/w80/' + getFlagCode(moeda.sigla) + '.png'" [alt]="moeda.sigla"
-                   (error)="$any($event.target).src = 'https://flagcdn.com/w80/un.png'">
-            </div>
-            <div class="info-pais">
-              <span class="nome">{{ moeda.nome }}</span>
-              <span class="sigla">{{ moeda.sigla }}</span>
-            </div>
-            <div class="valor">
-              {{ formatarValor(moeda.valor) }}
-            </div>
-            <div class="ponto-luz" [class.positivo]="moeda.valor < moeda.anterior" [class.negativo]="moeda.valor > moeda.anterior"></div>
-          </div>
-        }
-      </div>
-      <div class="status-text" style="font-size: 0.7rem; opacity: 0.6; margin-top: 10px;">
-        Sincronizado: {{ ultimaAtualizacao() }}
-      </div>
-    </div>
-  `
+  templateUrl: './card.component.html'
 })
+
 export class CardComponent implements OnInit {
   private readonly _currencyService = inject(CurrencyService);
   private readonly _decimalPipe = inject(DecimalPipe);
-  private readonly platformId = inject(PLATFORM_ID); // Identifica se é servidor ou navegador
+  private readonly platformId = inject(PLATFORM_ID);
 
+  // 1. SIGNALS (Sempre no topo da classe para organização)
   listaMoedas = signal<MoedaExibicao[]>([]);
   ultimaAtualizacao = signal<string>('---');
+  exibirExplicacao = signal(false); // Correção: signal() com "s" minúsculo
 
   private moedasConfig = [
     { sigla: 'BRL', nome: 'Brasil' },
+    { sigla: 'USD', nome: 'Estados Unidos'},
     { sigla: 'EUR', nome: 'União Europeia' },
     { sigla: 'GBP', nome: 'Reino Unido' },
     { sigla: 'JPY', nome: 'Japão' },
@@ -82,11 +57,23 @@ export class CardComponent implements OnInit {
   ];
 
   ngOnInit() {
-    // SÓ inicia o timer se estiver no NAVEGADOR. 
-    // No Servidor (SSR), isso evita o erro de Timeout.
     if (isPlatformBrowser(this.platformId)) {
       this.iniciarMonitoramento();
     }
+  }
+
+  // 2. MÉTODOS DE AÇÃO
+  toggleExplicacao() {
+    this.exibirExplicacao.update(valor => !valor);
+  }
+
+  getFlagCode(sigla: string): string {
+    const map: any = { 'BRL': 'br', 'USD': 'us', 'EUR': 'eu', 'GBP': 'gb', 'JPY': 'jp', 'CNY': 'cn' };
+    return map[sigla] || 'un';
+  }
+
+  formatarValor(v: number) { 
+    return this._decimalPipe.transform(v, '1.2-4'); 
   }
 
   private iniciarMonitoramento() {
@@ -109,11 +96,4 @@ export class CardComponent implements OnInit {
       error: (err) => console.error('Erro na API:', err)
     });
   }
-
-  getFlagCode(sigla: string): string {
-    const map: any = { 'BRL': 'br', 'EUR': 'eu', 'GBP': 'gb', 'JPY': 'jp', 'CNY': 'cn' };
-    return map[sigla] || 'un';
-  }
-
-  formatarValor(v: number) { return this._decimalPipe.transform(v, '1.2-4'); }
 }
