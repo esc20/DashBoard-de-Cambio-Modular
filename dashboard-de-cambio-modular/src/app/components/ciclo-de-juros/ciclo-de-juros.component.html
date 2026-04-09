@@ -1,0 +1,22 @@
+<div class="card-juros">
+  <h3 class="titulo">Ciclo de Juros (Anual)</h3>
+
+  <div class="lista-juros">
+    @for (item of taxas(); track item.sigla) {
+      <div class="item-juros">
+        <div class="info">
+          <span class="pais">{{ item.pais }}</span>
+          <span class="valor">{{ formatarTaxa(item.valor) }}</span>
+        </div>
+        <div class="barra-container">
+          <!-- A largura da barra é proporcional à taxa (ajustada para escala 0-15%) -->
+          <div class="barra-progresso" 
+               [style.width.%]="(item.valor / 15) * 100"
+               [style.background-color]="item.cor">
+          </div>
+        </div>
+        <span class="sigla-taxa">{{ item.sigla }}</span>
+      </div>
+    }
+  </div>
+</div>

@@ -1,0 +1,57 @@
+.card-juros {
+  width: 250px;
+  height: 230px;
+  background-color: #333; // Cor que você definiu para os outros cards
+  border-radius: 20px;
+  padding: 20px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  margin-left: 700px;
+  margin-top: -265px;
+}
+
+.titulo {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+.lista-juros {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.item-juros {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+
+  .info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+
+  .barra-container {
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+
+    .barra-progresso {
+      height: 100%;
+      transition: width 1s ease-in-out;
+    }
+  }
+
+  .sigla-taxa {
+    font-size: 0.65rem;
+    opacity: 0.6;
+    text-align: right;
+  }
+}

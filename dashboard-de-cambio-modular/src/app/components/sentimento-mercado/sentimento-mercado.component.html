@@ -15,7 +15,7 @@
 
     <!-- 3. Texto centralizado no meio do arco -->
     <div class="centro-texto">
-      <span class="numero">{{ valorSentimento() }}</span> 
+      <span class="numero" [style.opacity]="valorSentimento() === 0 ? 0.3 : 1">{{ valorSentimento() || '--' }}</span> 
       <span class="status" [style.color]="obterCorStatus()">{{ obterStatusTexto() }}</span>
     </div>
   </div>
