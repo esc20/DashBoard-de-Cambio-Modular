@@ -1,12 +1,54 @@
 .card-mapa {
-  width: 900px;
-  height: 400px;
+  width: 600px;
+  height: 380px;
+  margin-left: 390px;
+  margin-top: 30px;
   background-color: #333;
   border-radius: 20px;
-  padding: 20px;
+  padding: 1px; // Reduzi um pouco o padding para dar mais espaço ao mapa
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; // Garante que nada saia do card
+  background: rgba(30, 30, 30, 0.85);
+  position: relative;
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+
+  animation: pulsar-card-verde 4s infinite ease-in-out;
+  
+  // O Brilho do Card (Shadow-box colorida)
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.5), 
+              0 0 15px rgba(0, 255, 136, 0.1); // Um leve tom esverdeado de fundo
+  
+  transition: box-shadow 0.5s ease;
+
+  @keyframes pulsar-card-verde {
+  0% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.2); }
+  50% { box-shadow: 0 0 25px rgba(0, 255, 136, 0.5), inset 0 0 10px rgba(0, 255, 136, 0.2); }
+  100% { box-shadow: 0 0 5px rgba(0, 255, 136, 0.2); }
+}
+
+  &:hover {
+    // Aumenta o brilho quando o usuário foca no mapa
+    box-shadow: 0 0 30px rgba(0, 255, 136, 0.2), 
+                0 0 10px rgba(0, 255, 136, 0.1);
+  }
+
+
+  .header-mapa {
+    flex: 0 0 auto; // Ocupa apenas o espaço necessário
+  }
 
   .mapa-container {
-    width: 100%;
-    height: 320px;
+    flex: 1 1 auto; // Ocupa todo o resto do card
+    width: 100%;    // Ocupa 100% da largura interna (descontando o padding)
+    height: 100%;   // Ocupa 100% da altura interna
+    
+    // Alvo direto da div do echarts
+    div[echarts] {
+      width: 100% !important;
+      height: 100% !important;
+    }
   }
 }
