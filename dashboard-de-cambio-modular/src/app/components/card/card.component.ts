@@ -1,31 +1,8 @@
-import { Component, OnInit, signal, inject, Injectable, ChangeDetectionStrategy, PLATFORM_ID, Signal } from '@angular/core';
+import { Component, OnInit, signal, inject, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DecimalPipe, isPlatformBrowser } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { Observable, retry, timer, switchMap, Subscription } from 'rxjs';
-
-export interface ExchangeRateResponse {
-  result: string;
-  base_code: string;
-  conversion_rates: { [key: string]: number };
-  time_last_update_utc: string;
-}
-
-interface MoedaExibicao {
-  nome: string;
-  sigla: string;
-  valor: number;
-  anterior: number;
-}
-
-@Injectable({ providedIn: 'root' })
-export class CurrencyService {
-  private readonly _httpClient = inject(HttpClient);
-  private readonly apiUrl = 'https://v6.exchangerate-api.com/v6/c1e5adfaf186943bf9b2e50f/latest/USD';
-
-  getRates(): Observable<ExchangeRateResponse> {
-    return this._httpClient.get<ExchangeRateResponse>(this.apiUrl).pipe(retry({ count: 3, delay: 2000 }));
-  }
-}
+import { HttpClientModule } from '@angular/common/http';
+import { timer, switchMap, retry } from 'rxjs';
+import { CurrencyService, MoedaExibicao } from '../../currency.service'; // Ajuste o caminho conforme seu projeto
 
 @Component({
   selector: 'app-card',
@@ -36,16 +13,15 @@ export class CurrencyService {
   styleUrl: './card.component.scss',
   templateUrl: './card.component.html'
 })
-
 export class CardComponent implements OnInit {
   private readonly _currencyService = inject(CurrencyService);
   private readonly _decimalPipe = inject(DecimalPipe);
   private readonly platformId = inject(PLATFORM_ID);
 
-  // 1. SIGNALS (Sempre no topo da classe para organização)
+  // 1. SIGNALS
   listaMoedas = signal<MoedaExibicao[]>([]);
   ultimaAtualizacao = signal<string>('---');
-  exibirExplicacao = signal(false); // Correção: signal() com "s" minúsculo
+  exibirExplicacao = signal(false);
 
   private moedasConfig = [
     { sigla: 'BRL', nome: 'Brasil' },
@@ -76,36 +52,40 @@ export class CardComponent implements OnInit {
     return this._decimalPipe.transform(v, '1.2-4'); 
   }
 
-   private iniciarMonitoramento() {
+  private iniciarMonitoramento() {
     timer(0, 60000).pipe(
-      switchMap(() => this._currencyService.getRates())
+      switchMap(() => this._currencyService.getRates()),
+      retry({ count: 3, delay: 2000 })
     ).subscribe({
       next: (res) => {
         const taxas = res.conversion_rates;
         
-        // 1. Recupera o cache
+        // 1. Recupera o cache para comparação
         const cacheSalvo = localStorage.getItem('ultimas_taxas');
         const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) : taxas; 
 
-        this.listaMoedas.set(this.moedasConfig.map(cfg => {
+        // 2. Cria a lista processada (agora declarada corretamente como novasMoedas)
+        const novasMoedas: MoedaExibicao[] = this.moedasConfig.map(cfg => {
           const valorReal = taxas[cfg.sigla] || 0;
-
           const valorSimulado = valorReal + (Math.random() * 0.0002 - 0.0001);
-
           const valorAnteriorNoCache = taxasAnteriores[cfg.sigla] || valorReal;
 
           return {
             ...cfg,
             valor: valorSimulado,
-            anterior: valorAnteriorNoCache // Agora a variável existe!
+            anterior: valorAnteriorNoCache
           };
-        }));
+        });
 
-        // 3. Atualiza o cache para a próxima rodada
+        // 3. Atualiza os Signals (Local e Global para o Mapa)
+        this.listaMoedas.set(novasMoedas);
+        this._currencyService.listaMoedas.set(novasMoedas);
+      
+        // 4. Salva o novo estado no cache
         localStorage.setItem('ultimas_taxas', JSON.stringify(taxas));
         this.ultimaAtualizacao.set(new Date().toLocaleTimeString());
       },
-      error: (err) => console.error('Erro na API:', err)
+      error: (err) => console.error('Erro na API de Câmbio:', err)
     });
-   }
   }
+}

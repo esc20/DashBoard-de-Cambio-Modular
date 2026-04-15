@@ -1,19 +1,24 @@
 <div class="card-mapa">
-    <div class="header-mapa">
-        <h3>Fluxo de Capital Global</h3>
+  <div class="header-mapa">
+    <h3>Fluxo de Capital Global</h3>
+  </div>
+
+  <div class="mapa-relative-container">
+    <!-- Controles Flutuantes e Semi-transparentes -->
+    <div class="zoom-controls">
+      <button (click)="ajustarZoom(1.2)" title="Aumentar Zoom">+</button>
+      <button (click)="ajustarZoom(0.8)" title="Diminuir Zoom">−</button>
+      <button (click)="resetarMapa()" title="Resetar Mapa">⟲</button>
     </div>
 
     <div class="mapa-container">
-        <!-- O @if garante que o ECharts só apareça quando o navegador estiver pronto -->
-        @if (isBrowser()) {
-          <div echarts [options]="chartOptions" style="width: 100%; height: 320px;"></div>
-        } @else {
-          <div class="loading-mapa">Carregando mapa...</div>
-        }
+      @if (isBrowser()) {
+        <div echarts 
+             [options]="chartOptions" 
+             (chartInit)="onChartInit($event)" 
+             style="width: 100%; height: 100%;">
+        </div>
+      }
     </div>
-<div echarts 
-     [options]="chartOptions" 
-     (chartInit)="onChartInit($event)" 
-     class="mapa-container">
-</div>
+  </div>
 </div>

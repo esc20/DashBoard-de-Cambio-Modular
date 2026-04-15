@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, PLATFORM_ID, signal, effect, OnDestroy } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID, signal, effect } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { NgxEchartsDirective } from 'ngx-echarts';
@@ -12,23 +12,30 @@ import { CurrencyService } from '../../currency.service';
   templateUrl: './mapa-mundi.component.html',
   styleUrl: './mapa-mundi.component.scss'
 })
-export class MapaMundiComponent implements OnInit, OnDestroy {
+export class MapaMundiComponent implements OnInit {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
   private currencyService = inject(CurrencyService); 
 
   chartOptions: any = {};
   isBrowser = signal(false);
-  private timerPulso: any;
-  private intensidadePulso = 20; // Controle do brilho
+  private echartsInstance: any; 
 
   constructor() {
     effect(() => {
       const moedas = this.currencyService.listaMoedas();
-      if (moedas.length > 0 && this.chartOptions && this.chartOptions.series) {
+      if (moedas.length > 0 && this.echartsInstance) {
         this.atualizarCoresDoMapa(moedas);
       }
     });
+  }
+
+  onChartInit(ec: any) {
+    this.echartsInstance = ec;
+    const moedasAtuais = this.currencyService.listaMoedas();
+    if (moedasAtuais.length > 0) {
+      this.atualizarCoresDoMapa(moedasAtuais);
+    }
   }
 
   ngOnInit() {
@@ -37,34 +44,24 @@ export class MapaMundiComponent implements OnInit, OnDestroy {
       this.http.get('data/world.json').subscribe((geoJson: any) => {
         echarts.registerMap('world', geoJson);
         this.configurarMapaInicial();
-        this.iniciarPulsoAutomatico(); // Inicia a pulsação
       });
     }
   }
 
-  ngOnDestroy() {
-    if (this.timerPulso) clearInterval(this.timerPulso);
+  ajustarZoom(fator: number) {
+    if (this.echartsInstance) {
+      const options = this.echartsInstance.getOption();
+      const currentZoom = (options as any).series[0].zoom || 1;
+      this.echartsInstance.setOption({
+        series: [{ zoom: Math.min(Math.max(currentZoom * fator, 1), 5) }]
+      });
+    }
   }
 
-  // Lógica para fazer os países "respirarem" (pulsar brilho)
-  private iniciarPulsoAutomatico() {
-    let subindo = true;
-    this.timerPulso = setInterval(() => {
-      // Oscila o brilho entre 15 e 35
-      if (subindo) {
-        this.intensidadePulso += 2;
-        if (this.intensidadePulso >= 35) subindo = false;
-      } else {
-        this.intensidadePulso -= 2;
-        if (this.intensidadePulso <= 15) subindo = true;
-      }
-      
-      // Força a atualização do gráfico para refletir o novo brilho
-      const moedasAtuais = this.currencyService.listaMoedas();
-      if (moedasAtuais.length > 0) {
-        this.atualizarCoresDoMapa(moedasAtuais);
-      }
-    }, 150); // Velocidade do pulso (ajuste se quiser mais rápido ou devagar)
+  resetarMapa() {
+    if (this.echartsInstance) {
+      this.echartsInstance.setOption({ series: [{ zoom: 1, center: undefined }] });
+    }
   }
 
   configurarMapaInicial() {
@@ -77,57 +74,75 @@ export class MapaMundiComponent implements OnInit, OnDestroy {
         textStyle: { color: '#fff' }
       },
       series: [{
+        name: 'world',
         type: 'map',
         map: 'world',
         layoutCenter: ['50%', '50%'],
         layoutSize: '160%',
+        roam: true, 
+        scaleLimit: { min: 1, max: 5 },
         itemStyle: {
-          areaColor: '#1a1a1a',
-          borderColor: 'rgba(255,255,255,0.05)',
-          shadowBlur: 10
+          areaColor: 'rgba(255, 255, 255, 0.05)', 
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+          borderWidth: 0.5
         },
-        data: []
+        data: [] 
       }]
     };
   }
 
-  private atualizarCoresDoMapa(moedas: any[]) {
-    // Adicionei os novos países que você pediu ao mapeamento
-    const dadosMapa = moedas.map(m => {
-      let nomeIngles = m.nome;
-      if (m.sigla === 'BRL') nomeIngles = 'Brazil';
-      if (m.sigla === 'USD') nomeIngles = 'United States of America';
-      if (m.sigla === 'CNY') nomeIngles = 'China';
-      if (m.sigla === 'JPY') nomeIngles = 'Japan';
-      if (m.sigla === 'EUR') nomeIngles = 'France'; // Você pode duplicar para 'Germany'
-      if (m.sigla === 'RUB') nomeIngles = 'Russia';
-      if (m.sigla === 'IRR') nomeIngles = 'Iran';
-      if (m.sigla === 'UAH') nomeIngles = 'Ukraine';
+  // Função auxiliar para aplicar o estilo Neon
+  private estilizarPais(nome: string, subiu: boolean) {
+    const corNeon = subiu ? '#00ff88' : '#ff4444';
+    const brilhoNeon = subiu ? 'rgba(0, 255, 136, 0.7)' : 'rgba(255, 68, 68, 0.7)';
+
+    return {
+      name: nome,
+      itemStyle: {
+        areaColor: corNeon,
+        borderColor: '#fff',
+        borderWidth: 1.5,
+        shadowBlur: 25, 
+        shadowColor: brilhoNeon,
+        opacity: 1 
+      }
+    };
+  }
+
+  private gerarDadosMapa(moedas: any[]) {
+    // 1. Dados que vem da API de Câmbio
+    const dadosApi = moedas.map(m => {
+      let nomeJSON = '';
+      if (m.sigla === 'BRL') nomeJSON = 'Brazil';
+      if (m.sigla === 'USD') nomeJSON = 'United States of America';
+      if (m.sigla === 'CNY') nomeJSON = 'China';
+      if (m.sigla === 'JPY') nomeJSON = 'Japan';
+      if (m.sigla === 'EUR') nomeJSON = 'France'; 
+      if (m.sigla === 'GBP') nomeJSON = 'United Kingdom';
 
       const subiu = m.valor < m.anterior;
-      const corBase = subiu ? '#00ff88' : '#ff4444';
-      const glowCor = subiu ? 'rgba(0, 255, 136, 0.8)' : 'rgba(255, 68, 68, 0.8)';
+      return nomeJSON ? this.estilizarPais(nomeJSON, subiu) : null;
+    }).filter(d => d !== null);
 
-      return {
-        name: nomeIngles,
-        value: subiu ? 1 : -1,
-        itemStyle: {
-          areaColor: corBase,
-          shadowBlur: this.intensidadePulso, // USA A VARIÁVEL QUE OSCILA
-          shadowColor: glowCor,
-          borderColor: '#fff',
-          borderWidth: 1.2
-        }
-      };
-    });
+    // 2. Dados Manuais para Países de Conflito (Caso não estejam na API)
+    // Aqui você define se quer que eles apareçam em vermelho (false) ou verde (true)
+    const dadosConflito = [
+      this.estilizarPais('Russia', false),
+      this.estilizarPais('Iran', false),
+      this.estilizarPais('Israel', true),
+      this.estilizarPais('Ukraine', true)
+    ];
 
-    this.chartOptions = {
-      ...this.chartOptions,
-      animation: false, // Desativamos animação de entrada para o pulso ser fluido
+    // Une os dois arrays
+    return [...dadosApi, ...dadosConflito];
+  }
+
+  private atualizarCoresDoMapa(moedas: any[]) {
+    if (!this.echartsInstance) return;
+    this.echartsInstance.setOption({
       series: [{
-        ...this.chartOptions.series[0],
-        data: dadosMapa
+        data: this.gerarDadosMapa(moedas)
       }]
-    };
+    });
   }
 }
