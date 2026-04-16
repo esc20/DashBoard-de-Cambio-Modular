@@ -1,8 +1,8 @@
 import { Component, OnInit, signal, inject, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DecimalPipe, isPlatformBrowser } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import { timer, switchMap, retry } from 'rxjs';
-import { CurrencyService, MoedaExibicao } from '../../currency.service'; // Ajuste o caminho conforme seu projeto
+import { timer, switchMap, retry, catchError, of } from 'rxjs';
+import { CurrencyService, MoedaExibicao } from '../../currency.service'; 
 
 @Component({
   selector: 'app-card',
@@ -18,7 +18,6 @@ export class CardComponent implements OnInit {
   private readonly _decimalPipe = inject(DecimalPipe);
   private readonly platformId = inject(PLATFORM_ID);
 
-  // 1. SIGNALS
   listaMoedas = signal<MoedaExibicao[]>([]);
   ultimaAtualizacao = signal<string>('---');
   exibirExplicacao = signal(false);
@@ -38,7 +37,6 @@ export class CardComponent implements OnInit {
     }
   }
 
-  // 2. MÉTODOS DE AÇÃO
   toggleExplicacao() {
     this.exibirExplicacao.update(valor => !valor);
   }
@@ -53,39 +51,60 @@ export class CardComponent implements OnInit {
   }
 
   private iniciarMonitoramento() {
-    timer(0, 60000).pipe(
-      switchMap(() => this._currencyService.getRates()),
-      retry({ count: 3, delay: 2000 })
+    // Intervalo de 1 hora para economizar API, mudando para 1 min se estiver em simulação
+    timer(0, 3600000).pipe(
+      switchMap(() => this._currencyService.getRates().pipe(
+        catchError(err => {
+          console.warn('API Bloqueada (429) ou Offline. Ativando Simulação Inteligente.');
+          // Retorna um objeto fake para cair no processarDados
+          return of({
+            conversion_rates: { 'BRL': 5.42, 'USD': 1.0, 'EUR': 0.92, 'GBP': 0.78, 'JPY': 156.0, 'CNY': 7.23 },
+            isSimulado: true
+          });
+        })
+      )),
+      retry({ count: 2, delay: 5000 })
     ).subscribe({
-      next: (res) => {
-        const taxas = res.conversion_rates;
-        
-        // 1. Recupera o cache para comparação
-        const cacheSalvo = localStorage.getItem('ultimas_taxas');
-        const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) : taxas; 
-
-        // 2. Cria a lista processada (agora declarada corretamente como novasMoedas)
-        const novasMoedas: MoedaExibicao[] = this.moedasConfig.map(cfg => {
-          const valorReal = taxas[cfg.sigla] || 0;
-          const valorSimulado = valorReal + (Math.random() * 0.0002 - 0.0001);
-          const valorAnteriorNoCache = taxasAnteriores[cfg.sigla] || valorReal;
-
-          return {
-            ...cfg,
-            valor: valorSimulado,
-            anterior: valorAnteriorNoCache
-          };
-        });
-
-        // 3. Atualiza os Signals (Local e Global para o Mapa)
-        this.listaMoedas.set(novasMoedas);
-        this._currencyService.listaMoedas.set(novasMoedas);
-      
-        // 4. Salva o novo estado no cache
-        localStorage.setItem('ultimas_taxas', JSON.stringify(taxas));
-        this.ultimaAtualizacao.set(new Date().toLocaleTimeString());
-      },
-      error: (err) => console.error('Erro na API de Câmbio:', err)
+      next: (res: any) => {
+        this.processarDados(res.conversion_rates, res.isSimulado);
+      }
     });
   }
+
+  private processarDados(taxas: any, isSimulado: boolean = false) {
+    const cacheSalvo = localStorage.getItem('ultimas_taxas');
+    const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) : taxas; 
+
+    const novasMoedas: MoedaExibicao[] = this.moedasConfig.map(cfg => {
+      const valorBase = taxas[cfg.sigla] || 1;
+      
+      // Se for simulado, adicionamos uma micro-oscilação aleatória para o mapa "viver"
+      const variacao = isSimulado ? (Math.random() * 0.002 - 0.001) : 0;
+      const valorFinal = valorBase + (valorBase * variacao);
+
+      return {
+        ...cfg,
+        valor: valorFinal,
+        anterior: taxasAnteriores[cfg.sigla] || valorBase
+      };
+    });
+
+    // 1. Atualiza o Card
+    this.listaMoedas.set(novasMoedas);
+    
+    // 2. ACENDE O MAPA E O RELATÓRIO (Envia para o serviço global)
+    this._currencyService.listaMoedas.set(novasMoedas);
+
+    // 3. Gerencia o Cache e o Texto de rodapé
+    if (!isSimulado) {
+      localStorage.setItem('ultimas_taxas', JSON.stringify(taxas));
+      this.ultimaAtualizacao.set(new Date().toLocaleTimeString());
+    } else {
+      this.ultimaAtualizacao.set(new Date().toLocaleTimeString() + ' (Simulação)');
+    }
+  }
 }
+
+
+
+

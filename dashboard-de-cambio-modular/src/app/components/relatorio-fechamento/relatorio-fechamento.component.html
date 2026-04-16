@@ -1,0 +1,42 @@
+<div class="card-relatorio">
+  <div class="header">
+    <h3>Relatório de Fechamento</h3>
+    <span class="data">{{ today | date:'dd/MM/yyyy HH:mm' }}</span>
+  </div>
+
+  @if (relatorio()) {
+    <div class="conteudo">
+      <div class="status-geral">
+        <span class="label">Sentimento Geral:</span>
+        <span class="valor" [class.otimista]="relatorio()?.climaMercado === 'Otimista'">
+          {{ relatorio()?.climaMercado }}
+        </span>
+      </div>
+
+      <div class="destaques">
+        <div class="item ganho">
+          <span class="label">Maior Performance:</span>
+          <div class="moeda-info">
+            <span class="sigla">{{ relatorio()?.topGanho?.sigla }}</span>
+            <span class="seta">▲</span>
+          </div>
+        </div>
+
+        <div class="item perda">
+          <span class="label">Maior Pressão:</span>
+          <div class="moeda-info">
+            <span class="sigla">{{ relatorio()?.topPerda?.sigla }}</span>
+            <span class="seta">▼</span>
+          </div>
+        </div>
+      </div>
+
+      <p class="resumo-texto">
+        O mercado encerra o ciclo com <strong>{{ relatorio()?.totalAtivos }}</strong> ativos monitorados. 
+        O <strong>{{ relatorio()?.topGanho?.nome }}</strong> apresentou a melhor recuperação contra o dólar nas últimas horas.
+      </p>
+    </div>
+  } @else {
+    <div class="loading">Aguardando dados do mercado...</div>
+  }
+</div>

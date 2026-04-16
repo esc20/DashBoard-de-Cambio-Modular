@@ -5,11 +5,13 @@ import { SentimentoMercadoComponent } from './components/sentimento-mercado/sent
 import { CicloDeJurosComponent } from './components/ciclo-de-juros/ciclo-de-juros.component';
 import { MapaMundiComponent } from './components/mapa-mundi/mapa-mundi.component';
 import { FluxoAtivosComponent } from './components/fluxo-ativos/fluxo-ativos.component';
+import { RelatorioFechamentoComponent } from './components/relatorio-fechamento/relatorio-fechamento.component';
+import { NoticiasNoticiasComponent } from './components/noticias-noticias/noticias-noticias.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CardComponent, HeaderComponent, SentimentoMercadoComponent, CicloDeJurosComponent, MapaMundiComponent, FluxoAtivosComponent],
+  imports: [CardComponent, HeaderComponent, SentimentoMercadoComponent, CicloDeJurosComponent, MapaMundiComponent, FluxoAtivosComponent, RelatorioFechamentoComponent, NoticiasNoticiasComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

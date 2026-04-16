@@ -8,8 +8,6 @@
     <!-- Só renderiza o echarts se estiver no navegador -->
     @if (isBrowser() && chartOptions()) {
       <div echarts [options]="chartOptions()!" class="chart"></div>
-    } @else {
-      <div class="loading">Carregando dados de ativos...</div>
-    }
+    } 
   </div>
 </div>

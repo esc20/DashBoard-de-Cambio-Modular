@@ -1,0 +1,61 @@
+.card-relatorio {
+  width: 300px;
+  height: 320px;
+  background: rgba(34, 34, 34, 0.9);
+  border-radius: 20px;
+  padding: 20px;
+  margin-top: 30px;
+  margin-left: 1px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+  color: white;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    margin-bottom: 20px;
+    h3 { font-size: 0.85rem; text-transform: uppercase; opacity: 0.7; margin: 0; }
+    .data { font-size: 0.7rem; opacity: 0.5; }
+  }
+
+  .status-geral {
+    margin-bottom: 25px;
+    .label { font-size: 0.8rem; opacity: 0.6; display: block; }
+    .valor { 
+      font-size: 1.5rem; font-weight: bold; color: #ff4444; 
+      &.otimista { color: #00ff88; text-shadow: 0 0 10px rgba(0, 255, 136, 0.3); }
+    }
+  }
+
+  .destaques {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+
+    .item {
+      background: rgba(255, 255, 255, 0.03);
+      padding: 10px;
+      border-radius: 12px;
+      .label { font-size: 0.65rem; opacity: 0.5; display: block; margin-bottom: 5px; }
+      .moeda-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-weight: bold;
+      }
+      &.ganho { border-left: 3px solid #00ff88; .seta { color: #00ff88; } }
+      &.perda { border-left: 3px solid #ff4444; .seta { color: #ff4444; } }
+    }
+  }
+
+  .resumo-texto {
+    font-size: 0.85rem;
+    line-height: 1.5;
+    opacity: 0.8;
+    background: rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    border-radius: 10px;
+    strong { color: #00ff88; }
+  }
+}

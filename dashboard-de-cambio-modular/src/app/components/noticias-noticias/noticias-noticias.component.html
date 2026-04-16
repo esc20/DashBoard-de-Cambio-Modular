@@ -1,0 +1,34 @@
+<div class="card-noticias">
+    <div class="header">
+        <div class="live-indicator">
+            <span class="ponto"></span>
+            <h3>NOTÍCIAS DO MERCADO</h3>
+        </div>
+    </div>
+
+    <div class="feed-container">
+        <!-- O track no title garante que a lista seja atualizada de forma fluida -->
+        @for (item of noticias(); track item.title) {
+            <div class="noticia-card">
+                <div class="thumb-container">
+                    <!-- src direto do service. Referrerpolicy por segurança extra. -->
+                    <img [src]="item.urlToImage" 
+                         alt="Capa da Notícia" 
+                         referrerpolicy="no-referrer"
+                         (error)="substituirImagemErro($event)">
+
+                    <span class="fonte-tag">{{ item.source.name || 'Global' }}</span>
+                </div>
+
+                <div class="info">
+                    <h4 class="manchete">{{ item.title }}</h4>
+                    <!-- Estrutura para o SCSS de rodapé do card -->
+                    <div class="footer-noticia">
+                        <span class="tempo">Live Feed</span>
+                        <span class="leia-mais">Ler manchete completa →</span>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
