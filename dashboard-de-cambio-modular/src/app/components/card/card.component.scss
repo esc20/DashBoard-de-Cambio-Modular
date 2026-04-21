@@ -1,6 +1,6 @@
 :host {
   --primary-bg: rgba(28, 9, 36, 0.582);
-  --card-aqua: rgb(153, 145, 145);
+  --card-aqua: rgba(25, 25, 25, 0.95);
   --card-gray: #333;
   --card-yellow: #ffff00;
   display: block;
@@ -23,7 +23,7 @@
   background-color: var(--card-aqua);
   border-radius: 25px;
   padding: 20px;
-  color: #1a1a1a;
+  color: rgb(182, 180, 180);
   box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
 }
 
