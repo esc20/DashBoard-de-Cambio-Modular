@@ -14,14 +14,20 @@ export class SentimentoMercadoComponent implements OnInit {
   private readonly _currencyService = inject(CurrencyService);
 
   valorSentimento = signal<number>(0); 
+  exibirExplicacao = signal(false); // Signal de controle do Tooltip
+
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-    this.buscarDadosReais();
-    setInterval(() => this.buscarDadosReais(), 1800000);
+      this.buscarDadosReais();
+      setInterval(() => this.buscarDadosReais(), 1800000);
+    }
   }
-}
 
-   private buscarDadosReais() {
+  toggleExplicacao() {
+    this.exibirExplicacao.update(v => !v);
+  }
+
+  private buscarDadosReais() {
     this._currencyService.getMarketSentiment().subscribe({
       next: (res: any) => {
         if (res.data && res.data[0]) {
@@ -32,22 +38,21 @@ export class SentimentoMercadoComponent implements OnInit {
       error: (err) => console.error('Erro ao buscar sentimento:', err)
     });
   }
+
   calcularOffset() {
     const valor = this.valorSentimento(); 
     const maxDash = 215;
     return maxDash - (valor / 100) * maxDash;
   }
 
-  // 3. Método para definir a cor dinâmica
   obterCorStatus() {
     const v = this.valorSentimento();
-    if (v === 0) return 'rgba(255,255,255,0.2)'; // Cor de "carregando"
-    if (v < 30) return '#ff4444'; // Vermelho
-    if (v < 60) return '#ffff00'; // Amarelo
-    return '#00ff88'; // Verde
+    if (v === 0) return 'rgba(255,255,255,0.2)';
+    if (v < 30) return '#ff4444'; 
+    if (v < 60) return '#ffff00'; 
+    return '#00ff88'; 
   }
 
-  // 4. Método para o texto dinâmico
   obterStatusTexto() {
     const v = this.valorSentimento();
     if (v < 30) return 'Medo Extremo';

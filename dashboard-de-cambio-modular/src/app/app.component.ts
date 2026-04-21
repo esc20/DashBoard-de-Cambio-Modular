@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { CardComponent } from './components/card/card.component';
+import { CommonModule } from '@angular/common'; // Importação recomendada
 import { HeaderComponent } from './components/header/header.component';
+import { CardComponent } from './components/card/card.component';
 import { SentimentoMercadoComponent } from './components/sentimento-mercado/sentimento-mercado.component';
 import { CicloDeJurosComponent } from './components/ciclo-de-juros/ciclo-de-juros.component';
 import { MapaMundiComponent } from './components/mapa-mundi/mapa-mundi.component';
@@ -11,10 +12,21 @@ import { NoticiasNoticiasComponent } from './components/noticias-noticias/notici
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CardComponent, HeaderComponent, SentimentoMercadoComponent, CicloDeJurosComponent, MapaMundiComponent, FluxoAtivosComponent, RelatorioFechamentoComponent, NoticiasNoticiasComponent],
+  // Organizei os imports para facilitar a leitura
+  imports: [
+    CommonModule, 
+    HeaderComponent,
+    CardComponent, 
+    SentimentoMercadoComponent, 
+    CicloDeJurosComponent, 
+    MapaMundiComponent, 
+    FluxoAtivosComponent, 
+    RelatorioFechamentoComponent, 
+    NoticiasNoticiasComponent
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'dashboard-de-cambio-modular';
+  title = 'Global Flow Terminal'; // Mudei para um nome mais "Premium" condizente com o design
 }

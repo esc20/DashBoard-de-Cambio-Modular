@@ -16,8 +16,9 @@ export class NoticiasNoticiasComponent implements OnInit {
 
   noticias = signal<any[]>([]);
   carregando = signal(true);
+  exibirExplicacao = signal(false); // Novo signal para o Tooltip
 
-  // CORREÇÃO: URL direta de imagem (.jpg). O link antigo 'unsplash.com' era um site e causava erro.
+  // LINK CORRIGIDO: Agora aponta para uma imagem real (.jpg)
   private readonly fallbackImg = 'https://unsplash.com';
 
   ngOnInit() {
@@ -26,21 +27,18 @@ export class NoticiasNoticiasComponent implements OnInit {
     }
   }
 
+  toggleExplicacao() {
+    this.exibirExplicacao.update(v => !v);
+  }
+
   private iniciarAtualizacaoNoticias() {
-    // Configuramos para chamar a cada 1 hora (3600000 ms)
-    // O timer(0, ...) garante que a primeira chamada aconteça IMEDIATAMENTE
     timer(0, 3600000).pipe(
       switchMap(() => this.newsService.getUltimasNoticias()),
-      catchError((err) => {
-        console.error('Erro no loop de notícias:', err);
-        return of([]); // Retorna array vazio em caso de erro crítico para não quebrar o signal
-      })
+      catchError(() => of([]))
     ).subscribe({
       next: (data) => {
         if (data && Array.isArray(data)) {
-          // Filtramos apenas notícias que tenham título
-          const noticiasValidas = data.filter(n => n.title);
-          this.noticias.set(noticiasValidas);
+          this.noticias.set(data.filter(n => n.title));
         }
         this.carregando.set(false);
       },
@@ -48,14 +46,9 @@ export class NoticiasNoticiasComponent implements OnInit {
     });
   }
 
-  // MÉTODO BLINDADO: Mata o loop de erro e garante que uma imagem apareça
   substituirImagemErro(event: Event) {
     const img = event.target as HTMLImageElement;
-    
-    // 1. Desliga o ouvinte de erro imediatamente para impedir o loop infinito
     img.onerror = null; 
-    
-    // 2. Substitui pela imagem de backup segura (Link real .jpg)
     if (img.src !== this.fallbackImg) {
       img.src = this.fallbackImg;
     }

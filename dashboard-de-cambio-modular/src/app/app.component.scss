@@ -1,3 +1,69 @@
-#body {
-    background-color: #050505;
+.dashboard-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 25px; // Espaçamento uniforme entre as faixas
+  padding: 25px;
+  max-width: 1400px;
+  margin: 0 auto; // Centraliza o dashboard em telas grandes
+}
+
+// FAIXA 1: Organiza Câmbio à esquerda e os dois menores empilhados/lado a lado
+.status-row {
+  display: grid;
+  grid-template-columns: 320px 1fr; // Coluna fixa para o card de moedas
+  gap: 20px;
+
+  .col-indicadores {
+    display: grid;
+    grid-template-columns: 1fr 1fr; // Sentimento e Juros lado a lado
+    gap: 20px;
+  }
+}
+
+// FAIXA 2: Mapa ocupando 100%
+.map-row {
+  width: 100%;
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+// FAIXA 3: Fluxo de Ativos centralizado ou em destaque
+.analysis-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+// FAIXA 4: Base dividida (Notícias maior que o Relatório)
+.intelligence-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+// AJUSTE GLOBAL PARA STANDALONE:
+// Garante que os seletores do Angular se comportem como blocos flexíveis
+::ng-deep {
+  app-card, 
+  app-sentimento-mercado, 
+  app-ciclo-de-juros, 
+  app-mapa-mundi, 
+  app-fluxo-ativos, 
+  app-noticias-noticias, 
+  app-relatorio-fechamento {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Responsividade para telas menores
+@media (max-width: 1024px) {
+  .status-row, .intelligence-row {
+    grid-template-columns: 1fr;
+  }
+  .status-row .col-indicadores {
+    grid-template-columns: 1fr;
+  }
 }

@@ -1,36 +1,34 @@
 :root {
-  /* Fundo principal - Levemente acinzentado para não cansar a vista */
-  --bg-body: #f1f5f9; 
+  /* Paleta Dark OLED */
+  --bg-puro: #050505;
+  --bg-card: rgba(25, 25, 25, 0.95);
   
-  /* Superfícies (Cards, Modais) - Branco quase puro para contraste suave */
-  --bg-card: #ffffff;
+  /* Cores Neon Estratégicas */
+  --neon-verde: #00ff88;
+  --neon-vermelho: #ff4444;
+  --neon-azul: #00e5ff;
   
-  /* Sidebar/Navegação - Um azul marinho profundo para autoridade visual */
-  --bg-sidebar: #0f172a;
-  --text-sidebar: #f8fafc;
-
-  /* Tipografia - Evite o preto puro (#000). Use Slate para suavizar */
-  --background-main: rgba(255, 255, 255, 0.8); backdrop-filter: blur(8px);
-  --text-main: #1e293b;    /* Cinza escuro azulado */
-  --text-muted: #64748b;   /* Texto secundário */
+  /* Tipografia e Bordas */
+  --text-principal: #ffffff;
+  --text-secundario: rgba(255, 255, 255, 0.6);
+  --border-sutil: rgba(255, 255, 255, 0.05);
   
-  /* Cores de Destaque (Brand Colors) - Tons de Indigo/Royal Blue */
-  --primary: #4f46e5;
-  --primary-light: #eef2ff;
-  --primary-hover: #4338ca;
-
-  /* Bordas e Divisores - Sutis para não poluir o layout */
-  --border: #e2e8f0;
-  
-  /* Cores Semânticas */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --danger: #ef4444;
-
-  /* Sombras (Shadows) - Suaves e naturais */
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+  /* Sombra Padrão para os Cards */
+  --shadow-premium: 0 10px 40px rgba(0, 0, 0, 0.8);
 }
 
-body {
-  background-color: var(--bg-body);
+/* Reset Global */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  background-color: var(--bg-puro) !important;
+  color: var(--text-principal);
+  font-family: 'Inter', -apple-system, sans-serif;
+  overflow-x: hidden;
+}
+
+* {
+  box-sizing: border-box;
 }

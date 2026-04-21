@@ -1,4 +1,19 @@
 <div class="card-noticias">
+    <!-- ÍCONE DE INFORMAÇÃO PREMIUM -->
+    <div class="info-container-top" 
+         (mouseenter)="exibirExplicacao.set(true)" 
+         (mouseleave)="exibirExplicacao.set(false)"
+         (click)="toggleExplicacao()">
+        
+        <span class="info-icon">i</span>
+        
+        @if (exibirExplicacao()) {
+          <div class="info-tooltip">
+            Feed de notícias em tempo real focado em impacto econômico e movimentação de grandes ativos globais.
+          </div>
+        }
+    </div>
+
     <div class="header">
         <div class="live-indicator">
             <span class="ponto"></span>
@@ -7,22 +22,18 @@
     </div>
 
     <div class="feed-container">
-        <!-- O track no title garante que a lista seja atualizada de forma fluida -->
         @for (item of noticias(); track item.title) {
             <div class="noticia-card">
                 <div class="thumb-container">
-                    <!-- src direto do service. Referrerpolicy por segurança extra. -->
                     <img [src]="item.urlToImage" 
-                         alt="Capa da Notícia" 
+                         alt="Capa" 
                          referrerpolicy="no-referrer"
                          (error)="substituirImagemErro($event)">
-
                     <span class="fonte-tag">{{ item.source.name || 'Global' }}</span>
                 </div>
 
                 <div class="info">
                     <h4 class="manchete">{{ item.title }}</h4>
-                    <!-- Estrutura para o SCSS de rodapé do card -->
                     <div class="footer-noticia">
                         <span class="tempo">Live Feed</span>
                         <span class="leia-mais">Ler manchete completa →</span>

@@ -1,30 +1,17 @@
-:host {
-  --primary-bg: rgba(28, 9, 36, 0.582);
-  --card-aqua: rgba(25, 25, 25, 0.95);
-  --card-gray: #333;
-  --card-yellow: #ffff00;
-  display: block;
-  background-color: var(--primary-bg);
-  min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-.dashboard-container {
-  padding: 30px;  
-  color: white;
-}
-
-/* Estilização do Card de Câmbio */
 .card-financeiro {
-  width: 300px;
+  // Removido width e margin para o AppComponent controlar
+  width: 100%;
+  height: 100%; // Ocupa o espaço do grid
+  min-height: 390px;
   position: relative;
-  margin-top: 30px;
-  height: 390px;
-  background-color: var(--card-aqua);
+  background-color: rgba(25, 25, 25, 0.95);
   border-radius: 25px;
   padding: 20px;
   color: rgb(182, 180, 180);
-  box-shadow: 0 10px 20px rgba(0, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
 }
 
 .info-container-top {
@@ -41,31 +28,29 @@
     display: flex;
     align-items: center;
     justify-content: center;
-
-    // Estética do Círculo
     width: 22px;
     height: 22px;
     border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 50%; // Faz o círculo perfeito
-
-    font-family: serif; // O "i" fica mais elegante em fontes serifadas
+    border-radius: 50%;
+    font-family: serif;
     font-style: italic;
     font-size: 14px;
     color: rgba(255, 255, 255, 0.8);
     transition: all 0.2s ease-in-out;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: #fff;
-      color: #fff;
-      transform: scale(1.1); // Leve pulo ao passar o mouse
+      background: rgba(0, 255, 136, 0.1); // Fundo verde neon bem clarinho
+      border-color: var(--neon-verde);
+      color: var(--neon-verde);
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.3); // O "glow" que você já usa no mapa
+      transform: scale(1.1);
     }
   }
 
   .info-tooltip {
     margin-top: 8px;
     width: 180px;
-    background: #2a2a2a; // Fundo escuro elegante
+    background: #2a2a2a;
     color: #eee;
     padding: 12px;
     border-radius: 8px;
@@ -74,8 +59,6 @@
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
     border: 1px solid rgba(255, 255, 255, 0.1);
     text-align: left;
-
-    // Animação de entrada
     animation: fadeIn 0.2s ease-out;
   }
 }
@@ -86,17 +69,15 @@
   border-radius: 50%;
   margin-left: 10px;
   transition: all 0.5s ease;
-  background-color: #666; // Cor neutra (neutro)
+  background-color: #666;
   display: block;
 
-  // Quando a moeda sobe (Verde)
   &.subindo {
     background-color: #00ff88;
     box-shadow: 0 0 8px #00ff88, 0 0 15px rgba(0, 255, 136, 0.5);
     animation: pulsar-verde 2s infinite;
   }
 
-  // Quando a moeda cai (Vermelho)
   &.caindo {
     background-color: #ff4444;
     box-shadow: 0 0 8px #ff4444, 0 0 15px rgba(255, 68, 68, 0.5);
@@ -104,7 +85,6 @@
   }
 }
 
-// Animações de brilho
 @keyframes pulsar-verde {
   0% {
     box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
@@ -150,20 +130,21 @@
   font-size: 1.1rem;
   text-transform: uppercase;
   letter-spacing: 1px;
+  color: white;
 }
 
 .linha-moeda {
   display: flex;
   align-items: center;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
   .flag-container {
     width: 32px;
     height: 32px;
     border-radius: 50%;
     overflow: hidden;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     flex-shrink: 0;
 
     img {
@@ -182,11 +163,12 @@
     .nome {
       font-weight: 700;
       font-size: 0.85rem;
+      color: #eee;
     }
 
     .sigla {
       font-size: 0.7rem;
-      opacity: 0.7;
+      opacity: 0.6;
     }
   }
 
@@ -195,77 +177,14 @@
     font-weight: bold;
     margin-right: 10px;
     font-size: 0.9rem;
+    color: white;
   }
-
-}
-
-
-/* Posicionamento dos outros cards */
-// .card-tendencia-mundial {
-//   width: 620px;
-//   height: 180px;
-//   background-color: var(--card-gray);
-//   margin-left: 400px;
-//   border-radius: 12px;
-//   margin-top: -195px;
-// }
-
-// .ciclo-de-juros {
-//   width: 300px;
-//   height: 190px;
-//   background-color: var(--card-gray);
-//   margin-left: 400px;
-//   border-radius: 12px;
-//   margin-top: -408px;
-// }
-
-// .mapa-mundi {
-//   width: 900px;
-//   height: 390px;
-//   background-color: var(--card-gray);
-//   border-radius: 12px;
-//   margin-top: 260px;
-//   margin-left: 70px;
-// }
-
-// .vlume-por-ativo {
-//   width: 1000px;
-//   height: 220px;
-//   background-color: var(--card-gray);
-//   border-radius: 12px;
-//   margin-top: 40px;
-//   margin-left: 30px;
-// }
-
-// .footer-row {
-//   display: flex;
-//   gap: 20px;
-//   margin-top: 20px;
-// }
-
-// .Relatorio-de-fecho {
-//   width: 220px;
-//   height: 330px;
-//   background-color: var(--card-yellow);
-//   border-radius: 12px;
-//   color: black;
-// }
-
-// .Noticias-de-ultima-hora {
-//   width: 770px;
-//   height: 330px;
-//   background-color: var(--card-yellow);
-//   border-radius: 12px;
-//   color: black;
-// }
-
-p {
-  padding: 15px;
-  font-weight: bold;
 }
 
 .status-text {
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   text-align: center;
-  margin-top: 20px;
+  margin-top: auto; // Empurra para o fim do card
+  opacity: 0.5;
+  padding-bottom: 10px;
 }

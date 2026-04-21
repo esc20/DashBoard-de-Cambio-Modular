@@ -13,15 +13,21 @@ import { EChartsOption } from 'echarts';
 export class FluxoAtivosComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   
+  // Signals de Estado
   chartOptions = signal<EChartsOption | null>(null);
-  isBrowser = signal(false); // Controla a exibição no HTML
+  isBrowser = signal(false);
+  exibirExplicacao = signal(false); // Controle do ícone de info
 
   ngOnInit() {
-    // Só inicializa se for o navegador (cliente)
     if (isPlatformBrowser(this.platformId)) {
       this.isBrowser.set(true);
       this.configurarGrafico();
     }
+  }
+
+  // Métodos de Ação do Usuário
+  toggleExplicacao() {
+    this.exibirExplicacao.update(v => !v);
   }
 
   configurarGrafico() {

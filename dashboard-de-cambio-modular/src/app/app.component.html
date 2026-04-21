@@ -1,14 +1,31 @@
+<main class="dashboard-wrapper"> <!-- Removido o ngSkipHydration daqui -->
+  <app-header ngSkipHydration></app-header>
 
+  <header class="status-row">
+    <div class="col-cambio">
+      <!-- Coloque aqui para destravar o carregamento do card -->
+      <app-card ngSkipHydration></app-card> 
+    </div>
+    <div class="col-indicadores">
+      <app-sentimento-mercado ngSkipHydration></app-sentimento-mercado>
+      <app-ciclo-de-juros ngSkipHydration></app-ciclo-de-juros>
+    </div>
+  </header>
 
-<main id="body">
-   <app-header></app-header>  
+  <section class="map-row">
+    <app-mapa-mundi ngSkipHydration></app-mapa-mundi>
+  </section>
 
-   <app-card></app-card>
-   <app-sentimento-mercado></app-sentimento-mercado>
-   <app-ciclo-de-juros></app-ciclo-de-juros>
-   <app-mapa-mundi></app-mapa-mundi>
-   <app-fluxo-ativos></app-fluxo-ativos>
-   <app-relatorio-fechamento></app-relatorio-fechamento>
-   <app-noticias-noticias></app-noticias-noticias>
+  <section class="analysis-row">
+    <app-fluxo-ativos ngSkipHydration></app-fluxo-ativos>
+  </section>
 
+  <footer class="intelligence-row">
+    <div class="col-noticias">
+      <app-noticias-noticias ngSkipHydration></app-noticias-noticias>
+    </div>
+    <div class="col-relatorio">
+      <app-relatorio-fechamento ngSkipHydration></app-relatorio-fechamento>
+    </div>
+  </footer>
 </main>

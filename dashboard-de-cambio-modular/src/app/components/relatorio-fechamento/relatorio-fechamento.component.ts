@@ -1,24 +1,25 @@
-import { Component, inject, computed } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Garante que o DatePipe funcione
+import { Component, inject, computed, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { CurrencyService } from '../../currency.service';
 
 @Component({
   selector: 'app-relatorio-fechamento',
   standalone: true,
-  imports: [CommonModule], // O CommonModule deve estar aqui
+  imports: [CommonModule],
   templateUrl: './relatorio-fechamento.component.html',
   styleUrl: './relatorio-fechamento.component.scss'
 })
 export class RelatorioFechamentoComponent {
   private currencyService = inject(CurrencyService);
 
-  // 1. Crie a variável today aqui para o HTML encontrar
   today: Date = new Date(); 
+  exibirExplicacao = signal(false); // Controle do Tooltip
 
   relatorio = computed(() => {
     const moedas = this.currencyService.listaMoedas();
     if (moedas.length === 0) return null;
 
+    // Ordena pela variação percentual
     const ordenadas = [...moedas].sort((a, b) => 
       (a.valor / a.anterior) - (b.valor / b.anterior)
     );
@@ -30,4 +31,8 @@ export class RelatorioFechamentoComponent {
       climaMercado: ordenadas.filter(m => m.valor < m.anterior).length > moedas.length / 2 ? 'Otimista' : 'Cauteloso'
     };
   });
+
+  toggleExplicacao() {
+    this.exibirExplicacao.update(v => !v);
+  }
 }

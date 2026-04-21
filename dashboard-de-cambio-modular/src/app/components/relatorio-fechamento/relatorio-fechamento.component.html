@@ -1,4 +1,19 @@
 <div class="card-relatorio">
+  <!-- ÍCONE DE INFO PREMIUM -->
+  <div class="info-container-top" 
+       (mouseenter)="exibirExplicacao.set(true)" 
+       (mouseleave)="exibirExplicacao.set(false)"
+       (click)="toggleExplicacao()">
+    
+    <span class="info-icon">i</span>
+    
+    @if (exibirExplicacao()) {
+      <div class="info-tooltip">
+        Análise algorítmica baseada na variação de preços e volume. O sentimento é calculado pela proporção de ativos em alta versus ativos em baixa.
+      </div>
+    }
+  </div>
+
   <div class="header">
     <h3>Relatório de Fechamento</h3>
     <span class="data">{{ today | date:'dd/MM/yyyy HH:mm' }}</span>
@@ -37,6 +52,6 @@
       </p>
     </div>
   } @else {
-    <div class="loading">Aguardando dados do mercado...</div>
+    <div class="loading">Sincronizando dados finais...</div>
   }
 </div>

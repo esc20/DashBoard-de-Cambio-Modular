@@ -17,8 +17,10 @@ export class MapaMundiComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private currencyService = inject(CurrencyService); 
 
+  // --- SIGNALS DE ESTADO ---
   chartOptions: any = {};
   isBrowser = signal(false);
+  exibirExplicacao = signal(false); // Signal para o ícone de info
   private echartsInstance: any; 
 
   constructor() {
@@ -28,6 +30,11 @@ export class MapaMundiComponent implements OnInit {
         this.atualizarCoresDoMapa(moedas);
       }
     });
+  }
+
+  // --- MÉTODOS DE INTERAÇÃO ---
+  toggleExplicacao() {
+    this.exibirExplicacao.update(v => !v);
   }
 
   onChartInit(ec: any) {
@@ -91,7 +98,6 @@ export class MapaMundiComponent implements OnInit {
     };
   }
 
-  // Função auxiliar para aplicar o estilo Neon
   private estilizarPais(nome: string, subiu: boolean) {
     const corNeon = subiu ? '#00ff88' : '#ff4444';
     const brilhoNeon = subiu ? 'rgba(0, 255, 136, 0.7)' : 'rgba(255, 68, 68, 0.7)';
@@ -110,7 +116,6 @@ export class MapaMundiComponent implements OnInit {
   }
 
   private gerarDadosMapa(moedas: any[]) {
-    // 1. Dados que vem da API de Câmbio
     const dadosApi = moedas.map(m => {
       let nomeJSON = '';
       if (m.sigla === 'BRL') nomeJSON = 'Brazil';
@@ -124,8 +129,6 @@ export class MapaMundiComponent implements OnInit {
       return nomeJSON ? this.estilizarPais(nomeJSON, subiu) : null;
     }).filter(d => d !== null);
 
-    // 2. Dados Manuais para Países de Conflito (Caso não estejam na API)
-    // Aqui você define se quer que eles apareçam em vermelho (false) ou verde (true)
     const dadosConflito = [
       this.estilizarPais('Russia', false),
       this.estilizarPais('Iran', false),
@@ -133,7 +136,6 @@ export class MapaMundiComponent implements OnInit {
       this.estilizarPais('Ukraine', true)
     ];
 
-    // Une os dois arrays
     return [...dadosApi, ...dadosConflito];
   }
 

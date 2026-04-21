@@ -1,13 +1,31 @@
 <div class="card-fluxo">
+  <!-- ÍCONE DE INFORMAÇÃO PREMIUM -->
+  <div class="info-container-top" 
+       (mouseenter)="exibirExplicacao.set(true)" 
+       (mouseleave)="exibirExplicacao.set(false)"
+       (click)="toggleExplicacao()">
+    
+    <span class="info-icon">i</span>
+    
+    @if (exibirExplicacao()) {
+      <div class="info-tooltip">
+        Monitoramento de fluxo institucional. Valores positivos indicam entrada de capital (compra), enquanto negativos indicam saída (venda/proteção).
+      </div>
+    }
+  </div>
+
   <div class="header">
     <h3>Fluxo de Capital (Ativos)</h3>
     <span class="sub">Volume em Bilhões (USD)</span>
   </div>
   
   <div class="chart-container">
-    <!-- Só renderiza o echarts se estiver no navegador -->
     @if (isBrowser() && chartOptions()) {
-      <div echarts [options]="chartOptions()!" class="chart"></div>
+      <div echarts 
+           [options]="chartOptions()!" 
+           [autoResize]="true" 
+           class="chart">
+      </div>
     } 
   </div>
 </div>

@@ -1,21 +1,82 @@
 .card-juros {
-  width: 250px;
-  height: 230px;
+  width: 100%; 
+  height: 100%;
+  min-height: 230px;
   background-color: rgba(25, 25, 25, 0.95); 
   border-radius: 20px;
   padding: 20px;
   color: white;
   display: flex;
   flex-direction: column;
-  margin-left: 700px;
-  margin-top: -265px;
+  position: relative; // Essencial para posicionar o ícone
+  
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
+// ESTILO DO TOOLTIP E ÍCONE (Padronizado)
+.info-container-top {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  cursor: pointer;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+
+  .info-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    font-family: serif;
+    font-style: italic;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(0, 255, 136, 0.1);
+      border-color: var(--neon-verde);
+      color: var(--neon-verde);
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+      transform: scale(1.1);
+    }
+  }
+
+  .info-tooltip {
+    position: absolute;
+    top: 25px;
+    right: 0;
+    width: 200px;
+    background: #1a1a1a;
+    color: #eee;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 0.75rem;
+    line-height: 1.4;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    animation: fadeIn 0.2s ease-out;
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// RESTANTE DO SEU SCSS
 .titulo {
-  font-size: 0.9rem;
+  font-size: 0.8rem; // Ajustado para não brigar com o ícone
   text-transform: uppercase;
   margin-bottom: 20px;
   opacity: 0.8;
+  letter-spacing: 1px;
 }
 
 .lista-juros {
@@ -34,24 +95,27 @@
     justify-content: space-between;
     font-size: 0.85rem;
     font-weight: bold;
+    color: #eee;
   }
 
   .barra-container {
     width: 100%;
     height: 8px;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.05);
     border-radius: 4px;
     overflow: hidden;
 
     .barra-progresso {
       height: 100%;
       transition: width 1s ease-in-out;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.05); 
     }
   }
 
   .sigla-taxa {
-    font-size: 0.65rem;
-    opacity: 0.6;
+    font-size: 0.6rem;
+    opacity: 0.5;
     text-align: right;
+    margin-top: 2px;
   }
 }

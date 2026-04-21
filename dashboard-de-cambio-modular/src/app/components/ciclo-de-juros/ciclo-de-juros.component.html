@@ -1,4 +1,19 @@
 <div class="card-juros">
+  <!-- ÍCONE DE INFORMAÇÃO PREMIUM -->
+  <div class="info-container-top" 
+       (mouseenter)="exibirExplicacao.set(true)" 
+       (mouseleave)="exibirExplicacao.set(false)"
+       (click)="toggleExplicacao()">
+    
+    <span class="info-icon">i</span>
+    
+    @if (exibirExplicacao()) {
+      <div class="info-tooltip">
+        Taxas de juros referenciais definidas pelos Bancos Centrais. Influenciam o fluxo de capital global e a atratividade da moeda.
+      </div>
+    }
+  </div>
+
   <h3 class="titulo">Ciclo de Juros (Anual)</h3>
 
   <div class="lista-juros">
@@ -9,7 +24,6 @@
           <span class="valor">{{ formatarTaxa(item.valor) }}</span>
         </div>
         <div class="barra-container">
-          <!-- A largura da barra é proporcional à taxa (ajustada para escala 0-15%) -->
           <div class="barra-progresso" 
                [style.width.%]="(item.valor / 15) * 100"
                [style.background-color]="item.cor">

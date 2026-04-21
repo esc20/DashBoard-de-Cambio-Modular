@@ -1,18 +1,74 @@
 .card-fluxo {
-  width: 300px;
-  height: 365px;
+  width: 100%;
+  height: 100%;
+  min-height: 380px;
   background-color: rgba(25, 25, 25, 0.95);
   border-radius: 20px;
   padding: 20px;
-  margin-top: -260px;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 
-              0 0 20px rgba(0, 229, 255, 0.05); // Brilho azul sutil para diferenciar do mapa
+              0 0 20px rgba(0, 229, 255, 0.05);
+  
+  display: flex;
+  flex-direction: column;
+  position: relative; // Essencial para o ícone
+  overflow: hidden;
+
+  // PADRÃO DE INFO ICON E TOOLTIP
+  .info-container-top {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
+    z-index: 20;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    .info-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      font-family: serif;
+      font-style: italic;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.6);
+      transition: all 0.3s ease;
+
+      &:hover {
+        background: rgba(0, 229, 255, 0.1); // Brilho azul para combinar com este card
+        border-color: #00e5ff;
+        color: #00e5ff;
+        box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
+        transform: scale(1.1);
+      }
+    }
+
+    .info-tooltip {
+      position: absolute;
+      top: 25px;
+      right: 0;
+      width: 200px;
+      background: #1a1a1a;
+      color: #eee;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      line-height: 1.4;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      animation: fadeIn 0.2s ease-out;
+    }
+  }
 
   .header {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     h3 {
-      font-size: 0.9rem;
+      font-size: 0.85rem; // Reduzi um pouco para não bater no ícone
       color: white;
       text-transform: uppercase;
       letter-spacing: 1px;
@@ -20,16 +76,24 @@
     }
     .sub {
       font-size: 0.7rem;
-      color: rgba(255,255,255,0.5);
+      color: rgba(255,255,255,0.4);
     }
   }
 
   .chart-container {
+    flex: 1;
     width: 100%;
-    height: 300px;
-    .chart {
-      width: 100%;
-      height: 100%;
+    min-height: 280px;
+    position: relative;
+    
+    div {
+      width: 100% !important;
+      height: 100% !important;
     }
   }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
