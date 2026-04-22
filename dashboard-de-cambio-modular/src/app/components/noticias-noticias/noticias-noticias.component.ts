@@ -1,7 +1,6 @@
 import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { CurrencyService } from '../../currency.service';
-import { timer, switchMap, catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-noticias-noticias',
@@ -16,14 +15,14 @@ export class NoticiasNoticiasComponent implements OnInit {
 
   noticias = signal<any[]>([]);
   carregando = signal(true);
-  exibirExplicacao = signal(false); // Novo signal para o Tooltip
+  exibirExplicacao = signal(false);
 
-  // LINK CORRIGIDO: Agora aponta para uma imagem real (.jpg)
+  // Fallback de segurança máxima (Link direto de imagem)
   private readonly fallbackImg = 'https://unsplash.com';
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
-      this.iniciarAtualizacaoNoticias();
+      this.carregarNoticiasSimuladas();
     }
   }
 
@@ -31,15 +30,11 @@ export class NoticiasNoticiasComponent implements OnInit {
     this.exibirExplicacao.update(v => !v);
   }
 
-  private iniciarAtualizacaoNoticias() {
-    timer(0, 3600000).pipe(
-      switchMap(() => this.newsService.getUltimasNoticias()),
-      catchError(() => of([]))
-    ).subscribe({
+  private carregarNoticiasSimuladas() {
+    // Carrega instantaneamente os dados estratégicos do Service
+    this.newsService.getUltimasNoticias().subscribe({
       next: (data) => {
-        if (data && Array.isArray(data)) {
-          this.noticias.set(data.filter(n => n.title));
-        }
+        this.noticias.set(data);
         this.carregando.set(false);
       },
       error: () => this.carregando.set(false)
@@ -49,8 +44,6 @@ export class NoticiasNoticiasComponent implements OnInit {
   substituirImagemErro(event: Event) {
     const img = event.target as HTMLImageElement;
     img.onerror = null; 
-    if (img.src !== this.fallbackImg) {
-      img.src = this.fallbackImg;
-    }
+    img.src = this.fallbackImg;
   }
 }

@@ -9,7 +9,7 @@
         
         @if (exibirExplicacao()) {
           <div class="info-tooltip">
-            Feed de notícias em tempo real focado em impacto econômico e movimentação de grandes ativos globais.
+            Monitoramento estratégico de eventos geopolíticos e fluxos de capitais globais. Clique na notícia para ler no portal oficial.
           </div>
         }
     </div>
@@ -17,29 +17,31 @@
     <div class="header">
         <div class="live-indicator">
             <span class="ponto"></span>
-            <h3>NOTÍCIAS DO MERCADO</h3>
+            <h3>NOTÍCIAS ESTRATÉGICAS</h3>
         </div>
     </div>
 
     <div class="feed-container">
         @for (item of noticias(); track item.title) {
-            <div class="noticia-card">
-                <div class="thumb-container">
-                    <img [src]="item.urlToImage" 
-                         alt="Capa" 
-                         referrerpolicy="no-referrer"
-                         (error)="substituirImagemErro($event)">
-                    <span class="fonte-tag">{{ item.source.name || 'Global' }}</span>
-                </div>
+            <!-- O link agora envolve o card para tornar tudo clicável -->
+            <a [href]="item.url" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                <div class="noticia-card">
+                    <div class="thumb-container">
+                        <img [src]="item.urlToImage" 
+                             alt="Capa da Notícia" 
+                             (error)="substituirImagemErro($event)">
+                        <span class="fonte-tag">{{ item.source.name }}</span>
+                    </div>
 
-                <div class="info">
-                    <h4 class="manchete">{{ item.title }}</h4>
-                    <div class="footer-noticia">
-                        <span class="tempo">Live Feed</span>
-                        <span class="leia-mais">Ler manchete completa →</span>
+                    <div class="info">
+                        <h4 class="manchete">{{ item.title }}</h4>
+                        <div class="footer-noticia">
+                            <span class="tempo">Live Feed</span>
+                            <span class="leia-mais">Ler no portal oficial →</span>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </a>
         }
     </div>
 </div>

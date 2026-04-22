@@ -1,0 +1,39 @@
+<div class="card-geopolitico">
+  <!-- ÍCONE DE INFO PREMIUM -->
+  <div class="info-container-top" 
+       (mouseenter)="exibirExplicacao.set(true)" 
+       (mouseleave)="exibirExplicacao.set(false)"
+       (click)="toggleExplicacao()">
+    <span class="info-icon">i</span>
+    @if (exibirExplicacao()) {
+      <div class="info-tooltip">
+        Monitoramento estratégico de eventos geopolíticos de alto impacto. Estes eventos são os principais causadores de "Gaps" e volatilidade extrema no mercado de câmbio.
+      </div>
+    }
+  </div>
+
+  <!-- BACKGROUND COM FILTRO -->
+  <div class="bg-media">
+    <img src="diego-gonzalez-nJI8WAqpn7Y-unsplash.jpg" alt="War Room">
+    <div class="pelicula-digital"></div>
+  </div>
+
+  <div class="content">
+    <div class="header-geo">
+      <span class="pulse-icon"></span>
+      <h3>MONITOR GEOPOLÍTICO</h3>
+    </div>
+
+    <div class="lista-alertas">
+      @for (alerta of alertas(); track alerta.local) {
+        <div class="alerta-item" [style.border-left-color]="alerta.cor">
+          <div class="top-info">
+            <span class="status" [style.color]="alerta.cor">{{ alerta.status }}</span>
+            <span class="local">{{ alerta.local }}</span>
+          </div>
+          <p class="desc">{{ alerta.desc }}</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>

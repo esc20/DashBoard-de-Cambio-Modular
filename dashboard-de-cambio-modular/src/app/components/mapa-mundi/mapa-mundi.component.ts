@@ -17,22 +17,28 @@ export class MapaMundiComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private currencyService = inject(CurrencyService); 
 
-  // --- SIGNALS DE ESTADO ---
   chartOptions: any = {};
   isBrowser = signal(false);
-  exibirExplicacao = signal(false); // Signal para o ícone de info
+  exibirExplicacao = signal(false);
   private echartsInstance: any; 
 
+  // UNIFICADO EM UM ÚNICO CONSTRUCTOR
   constructor() {
     effect(() => {
+      // 1. Escuta moedas para atualizar cores
       const moedas = this.currencyService.listaMoedas();
       if (moedas.length > 0 && this.echartsInstance) {
         this.atualizarCoresDoMapa(moedas);
       }
+
+      // 2. Escuta o termo de busca do Header
+      const busca = this.currencyService.termoBusca();
+      if (busca && this.echartsInstance) {
+        this.focarNoPais(busca);
+      }
     });
   }
 
-  // --- MÉTODOS DE INTERAÇÃO ---
   toggleExplicacao() {
     this.exibirExplicacao.update(v => !v);
   }
@@ -55,6 +61,36 @@ export class MapaMundiComponent implements OnInit {
     }
   }
 
+  // --- LÓGICA DE BUSCA E FOCO ---
+  private focarNoPais(nomeOriginal: string) {
+    // Mapa de tradução simples para garantir que a busca funcione em PT-BR
+    const dicionario: { [key: string]: string } = {
+      'brasil': 'Brazil',
+      'brazil': 'Brazil',
+      'eua': 'United States of America',
+      'usa': 'United States of America',
+      'estados unidos': 'United States of America',
+      'china': 'China',
+      'japão': 'Japan',
+      'japao': 'Japan',
+      'frança': 'France'
+    };
+
+    const nomeBusca = nomeOriginal.toLowerCase().trim();
+    const nomeTraduzido = dicionario[nomeBusca] || nomeOriginal;
+
+    // Move o mapa para o país e aplica zoom
+    this.echartsInstance.setOption({
+      series: [{
+        name: 'world',
+        center: undefined, // Deixa o ECharts calcular o centro do país pelo nome no data
+        zoom: 4,           // Zoom de destaque
+        selectedMode: 'single',
+        data: [{ name: nomeTraduzido, selected: true }] // Destaca o país buscado
+      }]
+    });
+  }
+
   ajustarZoom(fator: number) {
     if (this.echartsInstance) {
       const options = this.echartsInstance.getOption();
@@ -67,7 +103,13 @@ export class MapaMundiComponent implements OnInit {
 
   resetarMapa() {
     if (this.echartsInstance) {
-      this.echartsInstance.setOption({ series: [{ zoom: 1, center: undefined }] });
+      this.echartsInstance.setOption({ 
+        series: [{ 
+          zoom: 1, 
+          center: undefined,
+          data: this.gerarDadosMapa(this.currencyService.listaMoedas()) // Volta as cores normais
+        }] 
+      });
     }
   }
 
@@ -87,7 +129,7 @@ export class MapaMundiComponent implements OnInit {
         layoutCenter: ['50%', '50%'],
         layoutSize: '160%',
         roam: true, 
-        scaleLimit: { min: 1, max: 5 },
+        scaleLimit: { min: 1, max: 8 },
         itemStyle: {
           areaColor: 'rgba(255, 255, 255, 0.05)', 
           borderColor: 'rgba(255, 255, 255, 0.1)',

@@ -8,6 +8,7 @@ import { MapaMundiComponent } from './components/mapa-mundi/mapa-mundi.component
 import { FluxoAtivosComponent } from './components/fluxo-ativos/fluxo-ativos.component';
 import { RelatorioFechamentoComponent } from './components/relatorio-fechamento/relatorio-fechamento.component';
 import { NoticiasNoticiasComponent } from './components/noticias-noticias/noticias-noticias.component';
+import { MonitorGeopoliticoComponent } from './components/monitor-geopolitico/monitor-geopolitico.component';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ import { NoticiasNoticiasComponent } from './components/noticias-noticias/notici
     MapaMundiComponent, 
     FluxoAtivosComponent, 
     RelatorioFechamentoComponent, 
-    NoticiasNoticiasComponent
+    NoticiasNoticiasComponent,
+    MonitorGeopoliticoComponent
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

@@ -22,7 +22,9 @@ export class CicloDeJurosComponent implements OnInit {
   taxas = signal([
     { pais: 'Brasil', sigla: 'SELIC', valor: 0, cor: '#00ff88' },
     { pais: 'EUA', sigla: 'FED', valor: 5.50, cor: '#3b82f6' },
-    { pais: 'Europa', sigla: 'BCE', valor: 4.50, cor: '#f59e0b' }
+    { pais: 'Europa', sigla: 'BCE', valor: 4.50, cor: '#f59e0b' },
+    { pais: 'China', sigla: 'LPR', valor: 3.45, cor: '#ff4444' }, 
+    { pais: 'Japão', sigla: 'BoJ', valor: 0.10, cor: '#ffffff' }
   ]);
 
   ngOnInit() {

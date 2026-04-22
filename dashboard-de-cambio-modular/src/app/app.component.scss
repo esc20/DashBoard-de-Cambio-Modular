@@ -1,40 +1,42 @@
+/* --- ESTRUTURA BASE (DESKTOP) --- */
 .dashboard-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 25px; // Espaçamento uniforme entre as faixas
+  gap: 25px; 
   padding: 25px;
   max-width: 1400px;
-  margin: 0 auto; // Centraliza o dashboard em telas grandes
+  margin: 0 auto; 
 }
 
-// FAIXA 1: Organiza Câmbio à esquerda e os dois menores empilhados/lado a lado
+// FAIXA 1: Câmbio à esquerda, indicadores à direita
 .status-row {
   display: grid;
-  grid-template-columns: 320px 1fr; // Coluna fixa para o card de moedas
+  grid-template-columns: 320px 1fr;
   gap: 20px;
 
   .col-indicadores {
     display: grid;
-    grid-template-columns: 1fr 1fr; // Sentimento e Juros lado a lado
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
   }
 }
 
-// FAIXA 2: Mapa ocupando 100%
+// FAIXA 2: Mapa full-width
 .map-row {
   width: 100%;
   border-radius: 20px;
   overflow: hidden;
 }
 
-// FAIXA 3: Fluxo de Ativos centralizado ou em destaque
+// FAIXA 3: Fluxo + Monitor Geopolítico lado a lado
 .analysis-row {
-  display: flex;
-  justify-content: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
   width: 100%;
 }
 
-// FAIXA 4: Base dividida (Notícias maior que o Relatório)
+// FAIXA 4: Notícias + Relatório
 .intelligence-row {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
@@ -42,28 +44,58 @@
   align-items: start;
 }
 
-// AJUSTE GLOBAL PARA STANDALONE:
-// Garante que os seletores do Angular se comportem como blocos flexíveis
+// AJUSTE GLOBAL PARA COMPONENTES
 ::ng-deep {
-  app-card, 
-  app-sentimento-mercado, 
-  app-ciclo-de-juros, 
-  app-mapa-mundi, 
-  app-fluxo-ativos, 
-  app-noticias-noticias, 
-  app-relatorio-fechamento {
+  app-card, app-sentimento-mercado, app-ciclo-de-juros, 
+  app-mapa-mundi, app-fluxo-ativos, app-monitor-geopolitico, 
+  app-noticias-noticias, app-relatorio-fechamento {
     display: block;
     width: 100%;
     height: 100%;
   }
 }
 
-// Responsividade para telas menores
+/* --- RESPONSIVIDADE (TABLET & MOBILE) --- */
+
+/* TABLETS (Até 1024px) */
 @media (max-width: 1024px) {
-  .status-row, .intelligence-row {
-    grid-template-columns: 1fr;
+  .status-row {
+    grid-template-columns: 1fr; // Câmbio ganha a largura toda
   }
+
+  .analysis-row, .intelligence-row {
+    grid-template-columns: 1fr; // Cards que eram lado a lado agora empilham
+  }
+}
+
+/* MOBILE (Até 600px) - O "Ajuste Fino" */
+@media (max-width: 600px) {
+  .dashboard-wrapper {
+    padding: 15px; // Reduz o respiro lateral para ganhar espaço
+    gap: 15px;
+  }
+
+  // Empilha Sentimento e Juros que ainda estavam lado a lado no Tablet
   .status-row .col-indicadores {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr; 
+  }
+
+  // Ajuste do Mapa no Celular
+  .map-row {
+    min-height: 300px;
+    ::ng-deep .card-mapa {
+      min-height: 300px !important;
+      padding: 10px; // Reduz padding interno no mobile
+    }
+  }
+
+  // Deixa os tooltips de informação mais amigáveis para dedos (touch)
+  ::ng-deep .info-tooltip {
+    width: 280px !important;
+    position: fixed !important; // Fixa na tela para não sumir no scroll
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 9999;
   }
 }

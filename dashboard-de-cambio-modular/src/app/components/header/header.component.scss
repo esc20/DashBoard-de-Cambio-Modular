@@ -1,12 +1,54 @@
 header {
+  height: 90px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 2rem;
-  background-color: rgba(10, 10, 10, 0.8);
-  backdrop-filter: blur(10px);
+  padding: 0 2rem;
+  position: relative;
+  overflow: hidden;
+  background-color: #050505; // Fundo caso a imagem demore a carregar
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  margin-bottom: 10px;
+
+  // --- CONTÊINER DA IMAGEM ---
+  .image-container {
+    position: absolute;
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%;
+    z-index: 0; // Fundo base
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    transition: background-image 1.5s ease-in-out;
+    animation: slow-zoom 20s infinite alternate;
+
+    .overlay-gradient {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      // Gradiente escuro para dar leitura ao texto
+      background: linear-gradient(90deg, 
+        #050505 0%, 
+        rgba(5, 5, 5, 0.3) 50%, 
+        #050505 100%);
+      filter: brightness(0.4);
+    }
+
+    .scanline-effect {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.1) 51%);
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+  }
+
+  // --- CONTEÚDO (LOGO E BUSCA) ---
+  // Forçamos o z-index para ficarem acima da imagem
+  .logo, .search-container {
+    position: relative;
+    z-index: 2;
+  }
 
   .logo {
     display: flex;
@@ -14,13 +56,11 @@ header {
     gap: 15px;
     cursor: pointer;
 
-    // ÍCONE DE GRÁFICO EM CSS (Substitui a imagem antiga)
     .logo-icon {
       display: flex;
       align-items: flex-end;
       gap: 3px;
       height: 24px;
-
       .bar {
         width: 4px;
         background: var(--neon-verde);
@@ -28,18 +68,15 @@ header {
         box-shadow: 0 0 8px var(--neon-verde);
         animation: logo-bounce 2s infinite ease-in-out;
       }
-
       .bar-1 { height: 60%; animation-delay: 0.1s; }
       .bar-2 { height: 100%; animation-delay: 0.3s; }
       .bar-3 { height: 40%; animation-delay: 0.5s; }
     }
 
-    // TEXTO DO LOGO ESTILIZADO
     .logo-text {
       display: flex;
       flex-direction: column;
       line-height: 1.1;
-
       .brand-name {
         color: white;
         font-weight: 800;
@@ -47,7 +84,6 @@ header {
         letter-spacing: 2px;
         text-transform: uppercase;
       }
-
       .brand-sub {
         color: var(--neon-verde);
         font-size: 0.6rem;
@@ -68,8 +104,6 @@ header {
       font-size: 18px;
       color: rgba(255, 255, 255, 0.6);
       transition: all 0.3s;
-      z-index: 2;
-
       &:hover {
         color: var(--neon-verde);
         transform: scale(1.1);
@@ -81,9 +115,6 @@ header {
       opacity: 0;
       overflow: hidden; 
       transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-      display: flex; 
-      align-items: center;
-
       input {
         width: 220px;
         padding: 0.5rem 1rem;
@@ -93,24 +124,22 @@ header {
         color: white;
         outline: none;
         font-size: 0.85rem;
-
-        &:focus {
-          border-color: var(--neon-verde);
-          box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
-        }
+        &:focus { border-color: var(--neon-verde); }
       }
     }
 
     &.aberto {
-      .search-bar {
-        width: 230px; 
-        opacity: 1;
-      }
+      .search-bar { width: 230px; opacity: 1; }
     }
   }
 }
 
-// ANIMAÇÃO DO LOGO "ALIVE"
+// ANIMAÇÕES
+@keyframes slow-zoom {
+  from { transform: scale(1); }
+  to { transform: scale(1.15); }
+}
+
 @keyframes logo-bounce {
   0%, 100% { transform: scaleY(1); opacity: 0.8; }
   50% { transform: scaleY(1.3); opacity: 1; }
