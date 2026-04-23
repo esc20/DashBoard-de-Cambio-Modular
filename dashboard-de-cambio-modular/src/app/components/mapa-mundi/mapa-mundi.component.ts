@@ -52,18 +52,34 @@ export class MapaMundiComponent implements OnInit {
 
   onChartInit(ec: any) {
     this.echartsInstance = ec;
-    const moedasAtuais = this.currencyService.listaMoedas();
-    if (moedasAtuais.length > 0) {
-      this.atualizarCoresDoMapa(moedasAtuais);
-    }
+    // Pequeno delay para garantir que o container do mapa tenha tamanho real no DOM
+    setTimeout(() => {
+      this.echartsInstance.resize();
+      const moedasAtuais = this.currencyService.listaMoedas();
+      if (moedasAtuais.length > 0) {
+        this.atualizarCoresDoMapa(moedasAtuais);
+      }
+    }, 200);
   }
 
   ngOnInit() {
     if (isPlatformBrowser(this.platformId)) {
       this.isBrowser.set(true);
-      this.http.get('data/world.json').subscribe((geoJson: any) => {
-        echarts.registerMap('world', geoJson);
-        this.configurarMapaInicial();
+      
+      // CAMINHO AJUSTADO: Usamos './data/world.json' para garantir que a Vercel 
+      // encontre o arquivo na pasta de assets/public
+      this.http.get('./data/world.json').subscribe({
+        next: (geoJson: any) => {
+          echarts.registerMap('world', geoJson);
+          this.configurarMapaInicial();
+          
+          // Força a pintura inicial das cores neon
+          setTimeout(() => {
+            const moedas = this.currencyService.listaMoedas();
+            if (moedas.length > 0) this.atualizarCoresDoMapa(moedas);
+          }, 500);
+        },
+        error: (err) => console.error('Erro ao carregar world.json:', err)
       });
     }
   }
@@ -90,7 +106,6 @@ export class MapaMundiComponent implements OnInit {
     const nomeBusca = nomeOriginal.toLowerCase().trim();
     const nomeTraduzido = dicionario[nomeBusca] || nomeOriginal;
 
-    // Obtemos a lista de países que o mapa conhece para validar
     const geoData = echarts.getMap('world');
     if (!geoData) return false;
 
@@ -99,17 +114,12 @@ export class MapaMundiComponent implements OnInit {
     );
 
     if (existeNoMapa) {
-      // 1. Limpa seleções anteriores
       this.echartsInstance.dispatchAction({ type: 'geoUnSelect' });
-
-      // 2. Dispara a ação de seleção para o país alvo
       this.echartsInstance.dispatchAction({
         type: 'geoSelect',
         name: nomeTraduzido
       });
 
-      // 3. Atualiza o mapa forçando center: undefined e zoom
-      // center: undefined permite que o ECharts foque no item 'selected: true'
       this.echartsInstance.setOption({
         series: [{
           name: 'world',

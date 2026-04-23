@@ -1,6 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, timeout, retry, map } from 'rxjs';
+import { environment } from '../environments/environment'; // Importação essencial
 
 export interface MoedaExibicao {
   nome: string;
@@ -22,7 +23,11 @@ export interface ExchangeRateResponse {
 export class CurrencyService {
   private readonly _httpClient = inject(HttpClient);
   
-  private readonly apiUrl = 'https://v6.exchangerate-api.com/v6/c1e5adfaf186943bf9b2e50f/latest/USD';
+  // O SEGREDO: Usamos a chave que vem do arquivo criado pela Vercel
+  private readonly apiKey = environment.apiKey;
+  private readonly apiUrl = `https://exchangerate-api.com{this.apiKey}/latest/USD`;
+  
+  // URLs ajustadas para endpoints JSON (evita o erro CORS da página principal)
   private readonly selicUrl = 'https://bcb.gov.br';
   private readonly sentimentUrl = 'https://alternative.me';
 
@@ -48,7 +53,6 @@ export class CurrencyService {
     );
   }
 
-  // MÉTODO SIMPLIFICADO: Agora usa apenas o backup estratégico para evitar erros de CORS
   getUltimasNoticias(): Observable<any[]> {
     return of(this.getNoticiasBackup());
   }
@@ -57,19 +61,19 @@ export class CurrencyService {
     return [
       { 
         title: 'Tensões Geopolíticas: Impacto imediato no fluxo de Dólar e Ouro.',
-        urlToImage: 'conflito-no-mundo.jpg', // Certifique-se que este arquivo está na pasta public ou assets
+        urlToImage: 'conflito-no-mundo.jpg',
         source: { name: 'Reuters' },
         url: 'https://reuters.com'
       },
       { 
         title: 'Bancos Centrais discutem novas taxas para conter inflação global.',
-        urlToImage: 'inflacao.webp', // Certifique-se que este arquivo está na pasta public ou assets
+        urlToImage: 'inflacao.webp',
         source: { name: 'Bloomberg' },
         url: 'https://bloomberg.com'
       },
       { 
         title: 'Bitcoin e Criptoativos: Alta volatilidade após novas regulações institucionais.',
-        urlToImage: 'traxer-kM6QNrgo0YE-unsplash.webp',
+        urlToImage: 'https://unsplash.com',
         source: { name: 'CNBC' },
         url: 'https://cnbc.com'
       }
