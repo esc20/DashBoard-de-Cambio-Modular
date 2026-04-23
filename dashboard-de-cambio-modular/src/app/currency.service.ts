@@ -28,6 +28,7 @@ export class CurrencyService {
 
   listaMoedas = signal<MoedaExibicao[]>([]);
   termoBusca = signal<string>(''); 
+  triggerBusca = signal<number>(0);
 
   getRates(): Observable<ExchangeRateResponse> {
     return this._httpClient.get<ExchangeRateResponse>(this.apiUrl).pipe(retry(2));

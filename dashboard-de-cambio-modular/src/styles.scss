@@ -32,3 +32,19 @@ html, body {
 * {
   box-sizing: border-box;
 }
+
+.highlight-search {
+  transition: all 0.3s ease;
+  outline: 4px solid var(--neon-verde) !important;
+  outline-offset: 5px;
+  box-shadow: 0 0 50px rgba(0, 255, 136, 0.4) !important;
+  transform: scale(1.02);
+  z-index: 999;
+  animation: pulse-highlight 2s ease-out; 
+}
+
+@keyframes pulse-highlight {
+  0% { transform: scale(1); box-shadow: 0 0 0px rgba(0, 255, 136, 0); }
+  30% { transform: scale(1.02); box-shadow: 0 0 50px rgba(0, 255, 136, 0.6); }
+  100% { transform: scale(1); box-shadow: 0 0 20px rgba(0, 255, 136, 0.2); }
+}

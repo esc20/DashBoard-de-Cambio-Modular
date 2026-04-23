@@ -22,19 +22,26 @@ export class MapaMundiComponent implements OnInit {
   exibirExplicacao = signal(false);
   private echartsInstance: any; 
 
-  // UNIFICADO EM UM ÚNICO CONSTRUCTOR
   constructor() {
     effect(() => {
-      // 1. Escuta moedas para atualizar cores
       const moedas = this.currencyService.listaMoedas();
       if (moedas.length > 0 && this.echartsInstance) {
         this.atualizarCoresDoMapa(moedas);
       }
 
-      // 2. Escuta o termo de busca do Header
       const busca = this.currencyService.termoBusca();
-      if (busca && this.echartsInstance) {
-        this.focarNoPais(busca);
+      const trigger = this.currencyService.triggerBusca(); 
+      
+      if (trigger > 0 && this.echartsInstance) {
+        const paisEncontrado = this.focarNoPais(busca);
+        
+        if (paisEncontrado) {
+          const elementoMapa = document.querySelector('.map-row');
+          elementoMapa?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          
+          elementoMapa?.classList.add('highlight-search');
+          setTimeout(() => elementoMapa?.classList.remove('highlight-search'), 2000);
+        }
       }
     });
   }
@@ -61,9 +68,7 @@ export class MapaMundiComponent implements OnInit {
     }
   }
 
-  // --- LÓGICA DE BUSCA E FOCO ---
-  private focarNoPais(nomeOriginal: string) {
-    // Mapa de tradução simples para garantir que a busca funcione em PT-BR
+  private focarNoPais(nomeOriginal: string): boolean {
     const dicionario: { [key: string]: string } = {
       'brasil': 'Brazil',
       'brazil': 'Brazil',
@@ -73,22 +78,52 @@ export class MapaMundiComponent implements OnInit {
       'china': 'China',
       'japão': 'Japan',
       'japao': 'Japan',
-      'frança': 'France'
+      'frança': 'France',
+      'alemanha': 'Germany',
+      'reino unido': 'United Kingdom',
+      'rússia': 'Russia',
+      'israel': 'Israel',
+      'ucrânia': 'Ukraine',
+      'irã': 'Iran'
     };
 
     const nomeBusca = nomeOriginal.toLowerCase().trim();
     const nomeTraduzido = dicionario[nomeBusca] || nomeOriginal;
 
-    // Move o mapa para o país e aplica zoom
-    this.echartsInstance.setOption({
-      series: [{
-        name: 'world',
-        center: undefined, // Deixa o ECharts calcular o centro do país pelo nome no data
-        zoom: 4,           // Zoom de destaque
-        selectedMode: 'single',
-        data: [{ name: nomeTraduzido, selected: true }] // Destaca o país buscado
-      }]
-    });
+    // Obtemos a lista de países que o mapa conhece para validar
+    const geoData = echarts.getMap('world');
+    if (!geoData) return false;
+
+    const existeNoMapa = geoData.geoJSON.features.some(
+      (f: any) => f.properties.name.toLowerCase() === nomeTraduzido.toLowerCase()
+    );
+
+    if (existeNoMapa) {
+      // 1. Limpa seleções anteriores
+      this.echartsInstance.dispatchAction({ type: 'geoUnSelect' });
+
+      // 2. Dispara a ação de seleção para o país alvo
+      this.echartsInstance.dispatchAction({
+        type: 'geoSelect',
+        name: nomeTraduzido
+      });
+
+      // 3. Atualiza o mapa forçando center: undefined e zoom
+      // center: undefined permite que o ECharts foque no item 'selected: true'
+      this.echartsInstance.setOption({
+        series: [{
+          name: 'world',
+          zoom: 4,
+          center: undefined, 
+          data: [
+            ...this.gerarDadosMapa(this.currencyService.listaMoedas()),
+            { name: nomeTraduzido, selected: true }
+          ]
+        }]
+      });
+      return true;
+    }
+    return false;
   }
 
   ajustarZoom(fator: number) {
@@ -107,7 +142,7 @@ export class MapaMundiComponent implements OnInit {
         series: [{ 
           zoom: 1, 
           center: undefined,
-          data: this.gerarDadosMapa(this.currencyService.listaMoedas()) // Volta as cores normais
+          data: this.gerarDadosMapa(this.currencyService.listaMoedas())
         }] 
       });
     }
