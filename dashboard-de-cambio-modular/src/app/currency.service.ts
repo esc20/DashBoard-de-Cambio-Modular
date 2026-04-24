@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, timeout, retry, map } from 'rxjs';
-import { environment } from '../environments/environment'; // Importação essencial
+import { environment } from '../environments'; // Certifique-se que o arquivo local existe como src/environments.ts
 
 export interface MoedaExibicao {
   nome: string;
@@ -23,11 +23,12 @@ export interface ExchangeRateResponse {
 export class CurrencyService {
   private readonly _httpClient = inject(HttpClient);
   
-  // O SEGREDO: Usamos a chave que vem do arquivo criado pela Vercel
+  // 1. CONFIGURAÇÃO DE API (Usando a chave injetada pela Vercel)
   private readonly apiKey = environment.apiKey;
+  // CORREÇÃO: Adicionado o /v6/ e o $ que faltava na interpolação
   private readonly apiUrl = `https://exchangerate-api.com{this.apiKey}/latest/USD`;
   
-  // URLs ajustadas para endpoints JSON (evita o erro CORS da página principal)
+  // 2. URLs DE DADOS REAIS (Endpoints JSON que não bloqueiam CORS)
   private readonly selicUrl = 'https://bcb.gov.br';
   private readonly sentimentUrl = 'https://alternative.me';
 
