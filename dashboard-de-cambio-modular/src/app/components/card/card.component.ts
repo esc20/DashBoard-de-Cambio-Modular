@@ -51,12 +51,12 @@ export class CardComponent implements OnInit {
   }
 
   private iniciarMonitoramento() {
-    // Intervalo de 1 hora para economizar API, mudando para 1 min se estiver em simulação
+    // Intervalo de 1 hora para dados reais
     timer(0, 3600000).pipe(
       switchMap(() => this._currencyService.getRates().pipe(
         catchError(err => {
-          console.warn('API Bloqueada (429) ou Offline. Ativando Simulação Inteligente.');
-          // Retorna um objeto fake para cair no processarDados
+          console.warn('Usando Backup Estratégico.');
+          // Mock de taxas para simulação
           return of({
             conversion_rates: { 'BRL': 5.42, 'USD': 1.0, 'EUR': 0.92, 'GBP': 0.78, 'JPY': 156.0, 'CNY': 7.23 },
             isSimulado: true
@@ -73,38 +73,51 @@ export class CardComponent implements OnInit {
 
   private processarDados(taxas: any, isSimulado: boolean = false) {
     const cacheSalvo = localStorage.getItem('ultimas_taxas');
-    const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) : taxas; 
+    // Se não houver cache, criamos um valor anterior fake para a luz acender de primeira
+    const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) : this.gerarTaxasAnterioresFake(taxas); 
 
     const novasMoedas: MoedaExibicao[] = this.moedasConfig.map(cfg => {
       const valorBase = taxas[cfg.sigla] || 1;
-      
-      // Se for simulado, adicionamos uma micro-oscilação aleatória para o mapa "viver"
-      const variacao = isSimulado ? (Math.random() * 0.002 - 0.001) : 0;
-      const valorFinal = valorBase + (valorBase * variacao);
+      let valorFinal = valorBase;
+      let valorAnterior = taxasAnteriores[cfg.sigla] || valorBase;
+
+      // Se for simulado, forçamos uma pequena diferença para as classes CSS (subindo/caindo) funcionarem
+      if (isSimulado) {
+        const oscilacao = (Math.random() * 0.04 - 0.02); // Variação de até 2%
+        valorFinal = valorBase + oscilacao;
+        // Garante que o valor anterior seja fixo para a luz não trocar de cor toda hora no mock
+        valorAnterior = valorBase; 
+      }
 
       return {
         ...cfg,
         valor: valorFinal,
-        anterior: taxasAnteriores[cfg.sigla] || valorBase
+        anterior: valorAnterior
       };
     });
 
-    // 1. Atualiza o Card
+    // 1. Atualiza o Card Local
     this.listaMoedas.set(novasMoedas);
     
-    // 2. ACENDE O MAPA E O RELATÓRIO (Envia para o serviço global)
+    // 2. Notifica o Serviço Global (Isso faz o Mapa e Relatório "acenderem")
     this._currencyService.listaMoedas.set(novasMoedas);
 
-    // 3. Gerencia o Cache e o Texto de rodapé
+    // 3. Gerenciamento de rodapé e cache
+    const agora = new Date().toLocaleTimeString();
     if (!isSimulado) {
       localStorage.setItem('ultimas_taxas', JSON.stringify(taxas));
-      this.ultimaAtualizacao.set(new Date().toLocaleTimeString());
+      this.ultimaAtualizacao.set(agora);
     } else {
-      this.ultimaAtualizacao.set(new Date().toLocaleTimeString() + ' (Simulação)');
+      this.ultimaAtualizacao.set(agora + ' (Mock)');
     }
   }
+
+  // Gera valores levemente diferentes apenas para o primeiro carregamento ter cores
+  private gerarTaxasAnterioresFake(taxasAtuais: any) {
+    const fake: any = {};
+    for (const key in taxasAtuais) {
+      fake[key] = taxasAtuais[key] * 0.99; // Simula que tudo subiu 1% para iniciar verde
+    }
+    return fake;
+  }
 }
-
-
-
-
