@@ -13,13 +13,13 @@
   display: grid;
   grid-template-columns: 320px 1fr;
   gap: 20px;
-   align-items: stretch;
+  align-items: stretch; // Força a altura igual entre Câmbio e Indicadores
 
   .col-indicadores {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    align-items: stretch; 
+    align-items: stretch; // Força a altura igual entre Sentimento e Juros
   }
 }
 
@@ -36,6 +36,7 @@
   grid-template-columns: 1fr 1fr;
   gap: 20px;
   width: 100%;
+  align-items: stretch;
 }
 
 // FAIXA 4: Notícias + Relatório
@@ -43,17 +44,23 @@
   display: grid;
   grid-template-columns: 1.5fr 1fr;
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
 }
 
-// AJUSTE GLOBAL PARA COMPONENTES
+// AJUSTE GLOBAL PARA COMPONENTES (A chave para alinhar as alturas)
 ::ng-deep {
   app-card, app-sentimento-mercado, app-ciclo-de-juros, 
   app-mapa-mundi, app-fluxo-ativos, app-monitor-geopolitico, 
   app-noticias-noticias, app-relatorio-fechamento {
-    display: block;
+    display: flex; // Alterado de block para flex
     width: 100%;
     height: 100%;
+    
+    // Garante que o primeiro elemento dentro do componente (geralmente o .card) estique
+    & > div:first-child {
+      flex: 1;
+      width: 100%;
+    }
   }
 }
 
@@ -62,39 +69,36 @@
 /* TABLETS (Até 1024px) */
 @media (max-width: 1024px) {
   .status-row {
-    grid-template-columns: 1fr; // Câmbio ganha a largura toda
+    grid-template-columns: 1fr; 
   }
 
   .analysis-row, .intelligence-row {
-    grid-template-columns: 1fr; // Cards que eram lado a lado agora empilham
+    grid-template-columns: 1fr; 
   }
 }
 
-/* MOBILE (Até 600px) - O "Ajuste Fino" */
+/* MOBILE (Até 600px) */
 @media (max-width: 600px) {
   .dashboard-wrapper {
-    padding: 15px; // Reduz o respiro lateral para ganhar espaço
+    padding: 15px;
     gap: 15px;
   }
 
-  // Empilha Sentimento e Juros que ainda estavam lado a lado no Tablet
   .status-row .col-indicadores {
     grid-template-columns: 1fr; 
   }
 
-  // Ajuste do Mapa no Celular
   .map-row {
     min-height: 300px;
     ::ng-deep .card-mapa {
       min-height: 300px !important;
-      padding: 10px; // Reduz padding interno no mobile
+      padding: 10px;
     }
   }
 
-  // Deixa os tooltips de informação mais amigáveis para dedos (touch)
   ::ng-deep .info-tooltip {
     width: 280px !important;
-    position: fixed !important; // Fixa na tela para não sumir no scroll
+    position: fixed !important;
     top: 50% !important;
     left: 50% !important;
     transform: translate(-50%, -50%) !important;

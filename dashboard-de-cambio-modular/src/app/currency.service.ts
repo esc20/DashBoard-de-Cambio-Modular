@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, timeout, retry, map } from 'rxjs';
-import { environment } from '../environments'; // Certifique-se que o arquivo local existe como src/environments.ts
+import { environment } from '../environments'; 
 
 export interface MoedaExibicao {
   nome: string;
@@ -23,12 +23,11 @@ export interface ExchangeRateResponse {
 export class CurrencyService {
   private readonly _httpClient = inject(HttpClient);
   
-  // 1. CONFIGURAÇÃO DE API (Usando a chave injetada pela Vercel)
+  // 1. CONFIGURAÇÃO DE API (Corrigida para Vercel)
   private readonly apiKey = environment.apiKey;
-  // CORREÇÃO: Adicionado o /v6/ e o $ que faltava na interpolação
   private readonly apiUrl = `https://exchangerate-api.com{this.apiKey}/latest/USD`;
   
-  // 2. URLs DE DADOS REAIS (Endpoints JSON que não bloqueiam CORS)
+  // 2. URLs DE DADOS REAIS (Endpoints JSON que evitam erro 404 e CORS)
   private readonly selicUrl = 'https://bcb.gov.br';
   private readonly sentimentUrl = 'https://alternative.me';
 
@@ -62,18 +61,21 @@ export class CurrencyService {
     return [
       { 
         title: 'Tensões Geopolíticas: Impacto imediato no fluxo de Dólar e Ouro.',
-        urlToImage: 'conflito-no-mundo.jpg',
+        // Imagem otimizada (leve e temática)
+        urlToImage: 'https://unsplash.com',
         source: { name: 'Reuters' },
         url: 'https://reuters.com'
       },
       { 
         title: 'Bancos Centrais discutem novas taxas para conter inflação global.',
-        urlToImage: 'inflacao.webp',
+        // Imagem otimizada (graficos financeiros)
+        urlToImage: 'https://unsplash.com',
         source: { name: 'Bloomberg' },
         url: 'https://bloomberg.com'
       },
       { 
         title: 'Bitcoin e Criptoativos: Alta volatilidade após novas regulações institucionais.',
+        // Imagem otimizada (Bitcoin real)
         urlToImage: 'https://unsplash.com',
         source: { name: 'CNBC' },
         url: 'https://cnbc.com'
