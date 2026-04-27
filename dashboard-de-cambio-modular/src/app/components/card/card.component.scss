@@ -1,7 +1,7 @@
 .card-financeiro {
-  // Removido width e margin para o AppComponent controlar
   width: 100%;
-  height: 100%; // Ocupa o espaço do grid
+  min-width: 400px;
+  height: 100%;
   min-height: 390px;
   position: relative;
   background-color: rgba(25, 25, 25, 0.95);
