@@ -3,7 +3,9 @@
     <div class="info-container-top" 
          (mouseenter)="exibirExplicacao.set(true)" 
          (mouseleave)="exibirExplicacao.set(false)"
-         (click)="toggleExplicacao()">
+         (click)="toggleExplicacao()"
+         role="button" 
+         aria-label="Informações sobre as notícias">
         
         <span class="info-icon">i</span>
         
@@ -23,12 +25,17 @@
 
     <div class="feed-container">
         @for (item of noticias(); track item.title) {
-            <!-- O link agora envolve o card para tornar tudo clicável -->
-            <a [href]="item.url" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+            <!-- Link envolvendo o card: display: block é essencial para o link ocupar o espaço do card -->
+            <a [href]="item.url" 
+               target="_blank" 
+               rel="noopener noreferrer" 
+               style="text-decoration: none; color: inherit; display: block; margin-bottom: 15px;">
+                
                 <div class="noticia-card">
                     <div class="thumb-container">
+                        <!-- Imagem com tratamento de erro -->
                         <img [src]="item.urlToImage" 
-                             alt="Capa da Notícia" 
+                             alt="Capa da Notícia: {{ item.title }}" 
                              (error)="substituirImagemErro($event)">
                         <span class="fonte-tag">{{ item.source.name }}</span>
                     </div>

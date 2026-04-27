@@ -17,7 +17,7 @@ export class NoticiasNoticiasComponent implements OnInit {
   carregando = signal(true);
   exibirExplicacao = signal(false);
 
-  // Fallback de segurança máxima (Link direto de imagem)
+  // AJUSTE: Link direto para uma imagem genérica de finanças (Source Unsplash)
   private readonly fallbackImg = 'https://unsplash.com';
 
   ngOnInit() {
@@ -31,7 +31,6 @@ export class NoticiasNoticiasComponent implements OnInit {
   }
 
   private carregarNoticiasSimuladas() {
-    // Carrega instantaneamente os dados estratégicos do Service
     this.newsService.getUltimasNoticias().subscribe({
       next: (data) => {
         this.noticias.set(data);
@@ -43,7 +42,9 @@ export class NoticiasNoticiasComponent implements OnInit {
 
   substituirImagemErro(event: Event) {
     const img = event.target as HTMLImageElement;
-    img.onerror = null; 
-    img.src = this.fallbackImg;
+    // Evita loop infinito caso a imagem de fallback também falhe
+    if (img.src !== this.fallbackImg) {
+      img.src = this.fallbackImg;
+    }
   }
 }
