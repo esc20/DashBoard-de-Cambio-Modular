@@ -4,15 +4,17 @@
   min-height: 320px;
   background: rgba(25, 25, 25, 0.95);
   border-radius: 20px;
-  padding: 20px;
+  padding: 25px; // Aumentado levemente para melhor respiro
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   color: white;
   display: flex;
   flex-direction: column;
-  position: relative; // Essencial para o ícone de info
+  position: relative;
+  
+  // GARANTE DISTRIBUIÇÃO UNIFORME
+  justify-content: space-between;
 
-  // PADRÃO DE INFO ICON E TOOLTIP (Estilo Analítico)
   .info-container-top {
     position: absolute;
     top: 15px;
@@ -64,16 +66,18 @@
   }
 
   .header {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     h3 { font-size: 0.85rem; text-transform: uppercase; opacity: 0.7; margin: 0; letter-spacing: 1px; }
     .data { font-size: 0.7rem; opacity: 0.5; }
   }
 
   .status-geral {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     .label { font-size: 0.8rem; opacity: 0.6; display: block; }
     .valor { 
-      font-size: 1.5rem; font-weight: bold; color: #ff4444; 
+      font-size: 1.8rem; // Valor um pouco maior para destaque
+      font-weight: bold; 
+      color: #ff4444; 
       &.otimista { color: #00ff88; text-shadow: 0 0 10px rgba(0, 255, 136, 0.3); }
     }
   }
@@ -83,10 +87,16 @@
     grid-template-columns: 1fr 1fr;
     gap: 15px;
     margin-bottom: 20px;
+    flex-grow: 1; // FAZ ESSA SEÇÃO CRESCER PARA OCUPAR ESPAÇO
+
     .item {
       background: rgba(255, 255, 255, 0.03);
-      padding: 10px;
+      padding: 12px;
       border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center; // Centraliza conteúdo interno
+
       .label { font-size: 0.65rem; opacity: 0.5; display: block; margin-bottom: 5px; }
       .moeda-info { display: flex; justify-content: space-between; align-items: center; font-weight: bold; }
       &.ganho { border-left: 3px solid #00ff88; .seta { color: #00ff88; } }
@@ -96,20 +106,24 @@
 
   .resumo-texto {
     font-size: 0.85rem;
-    line-height: 1.5;
-    opacity: 0.8;
-    background: rgba(0, 0, 0, 0.2);
-    padding: 12px;
+    line-height: 1.6;
+    opacity: 0.9;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
     border-radius: 10px;
     margin-top: auto; 
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
     strong { color: #00ff88; }
   }
 
   .loading {
-    text-align: center;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: rgba(255, 255, 255, 0.3);
     font-size: 0.8rem;
-    margin-top: 40px;
   }
 }
 

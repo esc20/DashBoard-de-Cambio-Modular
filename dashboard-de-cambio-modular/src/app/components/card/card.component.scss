@@ -1,65 +1,55 @@
 .card-financeiro {
   width: 100%;
-  min-width: 400px;
   height: 100%;
-  min-height: 390px;
+  min-height: 400px;
   position: relative;
   background-color: rgba(25, 25, 25, 0.95);
   border-radius: 25px;
-  padding: 20px;
+  padding: 25px;
   color: rgb(182, 180, 180);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
-.info-container-top {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  cursor: pointer;
-  z-index: 20;
+.lista-moedas-container {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  justify-content: space-around; // Espalha as moedas para preencher a altura
+  margin: 10px 0;
+}
 
-  .info-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
+.linha-moeda {
+  display: flex;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  &:last-child { border-bottom: none; }
+
+  .flag-container {
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
-    font-family: serif;
-    font-style: italic;
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.8);
-    transition: all 0.2s ease-in-out;
-
-    &:hover {
-      background: rgba(0, 255, 136, 0.1); // Fundo verde neon bem clarinho
-      border-color: var(--neon-verde);
-      color: var(--neon-verde);
-      box-shadow: 0 0 10px rgba(0, 255, 136, 0.3); // O "glow" que você já usa no mapa
-      transform: scale(1.1);
-    }
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    img { width: 100%; height: 100%; object-fit: cover; }
   }
 
-  .info-tooltip {
-    margin-top: 8px;
-    width: 180px;
-    background: #2a2a2a;
-    color: #eee;
-    padding: 12px;
-    border-radius: 8px;
-    font-size: 0.75rem;
-    line-height: 1.4;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    text-align: left;
-    animation: fadeIn 0.2s ease-out;
+  .info-pais {
+    flex: 1;
+    margin-left: 12px;
+    .nome { font-weight: 700; font-size: 0.85rem; color: #eee; }
+    .sigla { font-size: 0.7rem; opacity: 0.6; }
+  }
+
+  .valor {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 0.95rem;
+    color: white;
   }
 }
 
@@ -68,16 +58,12 @@
   height: 10px;
   border-radius: 50%;
   margin-left: 10px;
-  transition: all 0.5s ease;
-  background-color: #666;
-  display: block;
-
+  background-color: #444;
   &.subindo {
     background-color: #00ff88;
     box-shadow: 0 0 8px #00ff88, 0 0 15px rgba(0, 255, 136, 0.5);
     animation: pulsar-verde 2s infinite;
   }
-
   &.caindo {
     background-color: #ff4444;
     box-shadow: 0 0 8px #ff4444, 0 0 15px rgba(255, 68, 68, 0.5);
@@ -86,105 +72,30 @@
 }
 
 @keyframes pulsar-verde {
-  0% {
-    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7);
-  }
-
-  70% {
-    box-shadow: 0 0 0 10px rgba(0, 255, 136, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(0, 255, 136, 0);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0); }
 }
 
 @keyframes pulsar-vermelho {
-  0% {
-    box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7);
-  }
+  0% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0.7); }
+  70% { box-shadow: 0 0 0 10px rgba(255, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
+}
 
-  70% {
-    box-shadow: 0 0 0 10px rgba(255, 68, 68, 0);
-  }
-
-  100% {
-    box-shadow: 0 0 0 0 rgba(255, 68, 68, 0);
+.info-container-top {
+  position: absolute; top: 15px; right: 15px; cursor: pointer;
+  .info-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 22px; height: 22px; border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%; color: white; font-style: italic;
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-5px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.info-tooltip {
+  position: absolute; top: 30px; right: 0; width: 180px;
+  background: #2a2a2a; padding: 12px; border-radius: 8px; font-size: 0.75rem;
+  z-index: 100; border: 1px solid rgba(255,255,255,0.1);
 }
 
-.card-title {
-  margin: 0 0 15px 0;
-  font-size: 1.1rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: white;
-}
-
-.linha-moeda {
-  display: flex;
-  align-items: center;
-  padding: 8px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-
-  .flag-container {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .info-pais {
-    flex: 1;
-    margin-left: 12px;
-    display: flex;
-    flex-direction: column;
-
-    .nome {
-      font-weight: 700;
-      font-size: 0.85rem;
-      color: #eee;
-    }
-
-    .sigla {
-      font-size: 0.7rem;
-      opacity: 0.6;
-    }
-  }
-
-  .valor {
-    font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;
-    margin-right: 10px;
-    font-size: 0.9rem;
-    color: white;
-  }
-}
-
-.status-text {
-  font-size: 0.75rem;
-  text-align: center;
-  margin-top: auto; // Empurra para o fim do card
-  opacity: 0.5;
-  padding-bottom: 10px;
-}
+.status-text { font-size: 0.7rem; text-align: center; opacity: 0.4; }

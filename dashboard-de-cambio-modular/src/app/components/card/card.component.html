@@ -1,4 +1,4 @@
-<div class="card-financeiro" style="position: relative;">
+<div class="card-financeiro">
       
       <!-- Bloco de informação DENTRO do card -->
       <div class="info-container-top" 
@@ -15,11 +15,12 @@
         }
       </div>
 
-      <div class="flex justify-between items-center mb-6">
+      <div class="header-section">
         <h2 class="card-title">Câmbio Real-Time</h2>        
       </div>
  
-      <div class="space-y-2">
+      <!-- Adicionado o container que permite o espaçamento vertical -->
+      <div class="lista-moedas-container">
         @for (moeda of listaMoedas(); track moeda.sigla) {
           <div class="linha-moeda">
             <div class="flag-container">
@@ -33,16 +34,17 @@
             <div class="valor">
               {{ formatarValor(moeda.valor) }}
             </div>
-            <div class="ponto-luz" [class.subindo]="moeda.valor < moeda.anterior" [class.caindo]="moeda.valor > moeda.anterior"></div>
+            
+            <!-- Lógica corrigida: Se o número aumenta (ex: 5.40 -> 5.50), a moeda desvalorizou frente ao dólar (Caindo/Vermelho) -->
+            <div class="ponto-luz" 
+                 [class.subindo]="moeda.valor < moeda.anterior" 
+                 [class.caindo]="moeda.valor > moeda.anterior">
+            </div>
           </div>
         }
       </div>
 
-      <div class="status-text" style="font-size: 0.7rem; opacity: 0.6; margin-top: 10px;">
+      <div class="status-text">
         Sincronizado: {{ ultimaAtualizacao() }}
       </div>
-    </div>
-
-    <!--/////CARD-SENTIMNETO-DO-MERCADO-->
-
-    
+</div>
