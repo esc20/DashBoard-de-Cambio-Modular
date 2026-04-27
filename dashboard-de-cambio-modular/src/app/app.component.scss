@@ -11,15 +11,21 @@
 // FAIXA 1: Câmbio à esquerda, indicadores à direita
 .status-row {
   display: grid;
-  grid-template-columns: 320px 1fr;
+  // Aumentado de 320px para 380px para dar fôlego ao gráfico de câmbio
+  grid-template-columns: minmax(380px, 1fr) 2fr;
   gap: 20px;
-  align-items: stretch; // Força a altura igual entre Câmbio e Indicadores
+  align-items: stretch; 
+
+  .col-cambio {
+    display: flex;
+    width: 100%;
+  }
 
   .col-indicadores {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    align-items: stretch; // Força a altura igual entre Sentimento e Juros
+    align-items: stretch;
   }
 }
 
@@ -28,6 +34,7 @@
   width: 100%;
   border-radius: 20px;
   overflow: hidden;
+  display: flex;
 }
 
 // FAIXA 3: Fluxo + Monitor Geopolítico lado a lado
@@ -47,24 +54,35 @@
   align-items: stretch;
 }
 
-// AJUSTE GLOBAL PARA COMPONENTES (A chave para alinhar as alturas)
+// AJUSTE GLOBAL PARA COMPONENTES (Garante o alinhamento de altura na Vercel)
 ::ng-deep {
   app-card, app-sentimento-mercado, app-ciclo-de-juros, 
   app-mapa-mundi, app-fluxo-ativos, app-monitor-geopolitico, 
   app-noticias-noticias, app-relatorio-fechamento {
-    display: flex; // Alterado de block para flex
+    display: flex !important; 
+    flex-direction: column;
     width: 100%;
     height: 100%;
     
-    // Garante que o primeiro elemento dentro do componente (geralmente o .card) estique
-    & > div:first-child {
+    // Força o primeiro elemento (o card real) a ocupar todo o espaço do grid
+    & > *:first-child {
       flex: 1;
+      display: flex;
+      flex-direction: column;
       width: 100%;
+      height: 100%;
     }
   }
 }
 
 /* --- RESPONSIVIDADE (TABLET & MOBILE) --- */
+
+/* Ajuste intermediário para telas médias (evita o problema de encavalar) */
+@media (max-width: 1200px) {
+  .status-row {
+    grid-template-columns: 1fr 1.5fr;
+  }
+}
 
 /* TABLETS (Até 1024px) */
 @media (max-width: 1024px) {
