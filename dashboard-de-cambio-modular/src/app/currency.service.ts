@@ -1,7 +1,8 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, timeout, retry, map } from 'rxjs';
-import { environment } from '../environments'; 
+import { environment } from '../environments';
+
 
 export interface MoedaExibicao {
   nome: string;
