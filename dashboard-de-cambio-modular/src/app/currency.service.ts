@@ -25,7 +25,7 @@ export class CurrencyService {
   
   // 1. CONFIGURAÇÃO DE API (Corrigida sintaxe e endpoint)
   private readonly apiKey = environment.apiKey;
-  private readonly apiUrl = `https://exchangerate-api.com{this.apiKey}/latest/USD`;
+  private readonly apiUrl = `https://v6.exchangerate-api.com/v6/${this.apiKey}/latest/USD`;
   
   // 2. URLs DE DADOS REAIS (Endpoints que retornam JSON e permitem CORS)
   private readonly selicUrl = 'https://bcb.gov.br';
