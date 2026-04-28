@@ -1,13 +1,12 @@
 import { Component, OnInit, signal, inject, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DecimalPipe, isPlatformBrowser } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import { timer, switchMap, retry, catchError, of } from 'rxjs';
 import { CurrencyService, MoedaExibicao } from '../../currency.service'; 
 
 @Component({
   selector: 'app-card',
   standalone: true,
-  imports: [CommonModule, HttpClientModule],
+  imports: [CommonModule],
   providers: [DecimalPipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './card.component.scss',
