@@ -1,50 +1,62 @@
 <div class="card-financeiro">
-      
-      <!-- Bloco de informação DENTRO do card -->
-      <div class="info-container-top" 
-           (mouseenter)="exibirExplicacao.set(true)" 
-           (mouseleave)="exibirExplicacao.set(false)"
-           (click)="toggleExplicacao()">
-        
-        <span class="info-icon">i</span>
-        
-        @if (exibirExplicacao()) {
-          <div class="info-tooltip">
-            Os valores exibidos representam quanto 1 Dólar Americano (USD) vale em cada moeda selecionada.
-          </div>
-        }
+  <!-- ÍCONE DE INFO PREMIUM (Padronizado com os outros cards) -->
+  <div class="info-container-top" 
+       (mouseenter)="exibirExplicacao.set(true)" 
+       (mouseleave)="exibirExplicacao.set(false)"
+       (click)="toggleExplicacao()">
+    
+    <span class="info-icon">i</span>
+    
+    @if (exibirExplicacao()) {
+      <div class="info-tooltip">
+        Simulador de câmbio em tempo real. Digite um valor em USD para converter instantaneamente para as principais divisas globais.
       </div>
+    }
+  </div>
 
-      <div class="header-section">
-        <h2 class="card-title">Câmbio Real-Time</h2>        
-      </div>
- 
-      <!-- Adicionado o container que permite o espaçamento vertical -->
-      <div class="lista-moedas-container">
-        @for (moeda of listaMoedas(); track moeda.sigla) {
-          <div class="linha-moeda">
-            <div class="flag-container">
-              <img [src]="'https://flagcdn.com/w80/' + getFlagCode(moeda.sigla) + '.png'" [alt]="moeda.sigla"
-                   (error)="$any($event.target).src = 'https://flagcdn.com/w80/un.png'">
-            </div>
-            <div class="info-pais">
-              <span class="nome">{{ moeda.nome }}</span>
-              <span class="sigla">{{ moeda.sigla }}</span>
-            </div>
-            <div class="valor">
-              {{ formatarValor(moeda.valor) }}
-            </div>
-            
-            <!-- Lógica corrigida: Se o número aumenta (ex: 5.40 -> 5.50), a moeda desvalorizou frente ao dólar (Caindo/Vermelho) -->
-            <div class="ponto-luz" 
-                 [class.subindo]="moeda.valor < moeda.anterior" 
-                 [class.caindo]="moeda.valor > moeda.anterior">
-            </div>
-          </div>
-        }
-      </div>
+  <div class="header-section">
+    <h2 class="card-title">Câmbio Real-Time</h2>        
+  </div>
 
-      <div class="status-text">
-        Sincronizado: {{ ultimaAtualizacao() }}
+  <!-- INPUT DE CONVERSÃO DINÂMICA -->
+  <div class="conversor-input-group">
+    <span class="prefix">USD</span>
+    <input type="number" 
+           [value]="valorParaConverter()" 
+           (input)="atualizarValorConversao($event)"
+           placeholder="Valor para converter...">
+  </div>
+
+  <!-- CONTAINER DA LISTA (Com lógica de conversão no valor) -->
+  <div class="lista-moedas-container">
+    @for (moeda of listaMoedas(); track moeda.sigla) {
+      <div class="linha-moeda">
+        <div class="flag-container">
+          <img [src]="'https://flagcdn.com/w80/' + getFlagCode(moeda.sigla) + '.png'" 
+               [alt]="moeda.sigla"
+               (error)="$any($event.target).src = 'https://flagcdn.com/w80/un.png'">
+        </div>
+        
+        <div class="info-pais">
+          <span class="nome">{{ moeda.nome }}</span>
+          <span class="sigla">{{ moeda.sigla }}</span>
+        </div>
+
+        <!-- O VALOR AGORA É MULTIPLICADO PELO INPUT -->
+        <div class="valor">
+          {{ formatarValor(moeda.valor * valorParaConverter()) }}
+        </div>
+        
+        <!-- PONTO DE LUZ COM PULSAÇÃO -->
+        <div class="ponto-luz" 
+             [class.subindo]="moeda.valor < moeda.anterior" 
+             [class.caindo]="moeda.valor > moeda.anterior">
+        </div>
       </div>
+    }
+  </div>
+
+  <div class="status-text">
+    Sincronizado: {{ ultimaAtualizacao() }}
+  </div>
 </div>

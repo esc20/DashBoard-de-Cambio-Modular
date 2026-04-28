@@ -1,3 +1,4 @@
+
 .card-financeiro {
   width: 100%;
   height: 100%;
@@ -12,22 +13,80 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  overflow: hidden;
+}
+
+// --- NOVO: INPUT DE CONVERSÃO ---
+.conversor-input-group {
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 8px 15px;
+  margin: 15px 0;
+  transition: all 0.3s ease;
+
+  &:focus-within {
+    border-color: #00ff88;
+    box-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  }
+
+  .prefix {
+    font-weight: bold;
+    color: #00ff88;
+    font-size: 0.8rem;
+    margin-right: 12px;
+    letter-spacing: 1px;
+  }
+
+  input {
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1rem;
+    outline: none;
+    width: 100%;
+    
+    &::placeholder { color: rgba(255, 255, 255, 0.2); }
+    &::-webkit-inner-spin-button { display: none; } 
+  }
 }
 
 .lista-moedas-container {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-around; // Espalha as moedas para preencher a altura
+  justify-content: space-around;
   margin: 10px 0;
 }
 
+// --- NOVO: HOVER BRILHANTE ---
 .linha-moeda {
   display: flex;
   align-items: center;
-  padding: 12px 0;
+  padding: 12px 10px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  border-radius: 10px;
+  margin: 0 -5px;
+
   &:last-child { border-bottom: none; }
+
+  &:hover {
+    background: rgba(0, 255, 136, 0.03);
+    transform: translateX(8px);
+    
+    .valor {
+      color: #00ff88;
+      text-shadow: 0 0 12px rgba(0, 255, 136, 0.6);
+      transform: scale(1.05);
+    }
+
+    .flag-container { border-color: #00ff88; }
+  }
 
   .flag-container {
     width: 32px;
@@ -35,6 +94,8 @@
     border-radius: 50%;
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+    transition: all 0.3s ease;
     img { width: 100%; height: 100%; object-fit: cover; }
   }
 
@@ -48,8 +109,9 @@
   .valor {
     font-family: 'Courier New', Courier, monospace;
     font-weight: bold;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: white;
+    transition: all 0.3s ease;
   }
 }
 
@@ -71,6 +133,52 @@
   }
 }
 
+// --- PADRONIZAÇÃO DO INFO ICON ---
+.info-container-top {
+  position: absolute; 
+  top: 15px; 
+  right: 15px; 
+  cursor: pointer;
+  z-index: 100;
+
+  .info-icon {
+    display: flex; align-items: center; justify-content: center;
+    width: 20px; height: 20px; 
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%; 
+    color: rgba(255, 255, 255, 0.6); 
+    font-family: serif; font-style: italic; font-size: 13px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #fff;
+      color: #fff;
+      transform: scale(1.1);
+    }
+  }
+
+  .info-tooltip {
+    position: absolute; top: 25px; right: 0; width: 200px;
+    background: #1a1a1a; padding: 12px; border-radius: 10px; 
+    font-size: 0.75rem; line-height: 1.4; color: #eee;
+    z-index: 101; border: 1px solid rgba(255,255,255,0.1);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.8);
+    animation: fadeIn 0.2s ease-out;
+  }
+}
+
+.card-title {
+  margin: 0;
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: white;
+  opacity: 0.9;
+}
+
+.status-text { font-size: 0.7rem; text-align: center; opacity: 0.4; margin-top: 10px; }
+
 @keyframes pulsar-verde {
   0% { box-shadow: 0 0 0 0 rgba(0, 255, 136, 0.7); }
   70% { box-shadow: 0 0 0 10px rgba(0, 255, 136, 0); }
@@ -83,19 +191,7 @@
   100% { box-shadow: 0 0 0 0 rgba(255, 68, 68, 0); }
 }
 
-.info-container-top {
-  position: absolute; top: 15px; right: 15px; cursor: pointer;
-  .info-icon {
-    display: flex; align-items: center; justify-content: center;
-    width: 22px; height: 22px; border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 50%; color: white; font-style: italic;
-  }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-.info-tooltip {
-  position: absolute; top: 30px; right: 0; width: 180px;
-  background: #2a2a2a; padding: 12px; border-radius: 8px; font-size: 0.75rem;
-  z-index: 100; border: 1px solid rgba(255,255,255,0.1);
-}
-
-.status-text { font-size: 0.7rem; text-align: center; opacity: 0.4; }

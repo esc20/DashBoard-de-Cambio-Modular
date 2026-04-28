@@ -21,6 +21,9 @@ export class CardComponent implements OnInit {
   listaMoedas = signal<MoedaExibicao[]>([]);
   ultimaAtualizacao = signal<string>('---');
   exibirExplicacao = signal(false);
+  
+  // SIGNAL PARA O CONVERSOR DINÂMICO
+  valorParaConverter = signal<number>(1);
 
   private moedasConfig = [
     { sigla: 'BRL', nome: 'Brasil' },
@@ -37,6 +40,14 @@ export class CardComponent implements OnInit {
     }
   }
 
+  // FUNÇÃO DO CONVERSOR
+  atualizarValorConversao(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const valor = parseFloat(input.value);
+    // Se o input estiver vazio ou não for número, define como 0 para não quebrar o cálculo
+    this.valorParaConverter.set(isNaN(valor) ? 0 : valor);
+  }
+
   toggleExplicacao() {
     this.exibirExplicacao.update(valor => !valor);
   }
@@ -51,7 +62,6 @@ export class CardComponent implements OnInit {
   }
 
   private iniciarMonitoramento() {
-    // Atualização a cada 1 hora para dados reais
     timer(0, 3600000).pipe(
       switchMap(() => this._currencyService.getRates().pipe(
         catchError(() => {
@@ -71,23 +81,17 @@ export class CardComponent implements OnInit {
 
   private processarDados(taxas: any, isSimulado: boolean = false) {
     const cacheSalvo = localStorage.getItem('ultimas_taxas');
-    // Se não houver cache, gera o fake. Se houver, usa o salvo.
     const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) : this.gerarTaxasAnterioresFake(taxas); 
 
     const novasMoedas: MoedaExibicao[] = this.moedasConfig.map((cfg, index) => {
       const valorFinal = taxas[cfg.sigla] || 1;
       let valorAnterior = taxasAnteriores[cfg.sigla] || valorFinal;
 
-      // MELHORIA DE LÓGICA PARA O RECRUTADOR:
-      // Se os valores forem iguais (comum em APIs estáveis), alternamos a tendência
-      // para mostrar luzes verdes e vermelhas ao mesmo tempo.
       if (valorFinal === valorAnterior && !isSimulado) {
-        // Ímpar sobe (verde), par desce (vermelho)
         valorAnterior = index % 2 === 0 ? valorFinal * 1.001 : valorFinal * 0.999;
       }
 
       if (isSimulado) {
-        // No mock, forçamos uma oscilação randômica para visualização
         const oscilacao = (Math.random() * 0.04 - 0.02);
         return { ...cfg, valor: valorFinal + oscilacao, anterior: valorFinal };
       }
@@ -114,7 +118,6 @@ export class CardComponent implements OnInit {
   private gerarTaxasAnterioresFake(taxasAtuais: any) {
     const fake: any = {};
     Object.keys(taxasAtuais).forEach((key, index) => {
-        // Distribui tendências iniciais fakes para o primeiro carregamento ser colorido
         fake[key] = index % 2 === 0 ? taxasAtuais[key] * 1.002 : taxasAtuais[key] * 0.998;
     });
     return fake;
