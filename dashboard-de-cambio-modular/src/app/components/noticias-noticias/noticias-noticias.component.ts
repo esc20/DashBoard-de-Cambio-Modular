@@ -1,48 +1,52 @@
-import { Component, OnInit, inject, signal, PLATFORM_ID } from '@angular/core';
+import { Component, OnInit, inject, signal, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { CurrencyService } from '../../currency.service';
+import { CurrencyService, Noticia } from '../../currency.service'; // Importamos a Interface
 
 @Component({
   selector: 'app-noticias-noticias',
   standalone: true,
   imports: [CommonModule],
   templateUrl: './noticias-noticias.component.html',
-  styleUrl: './noticias-noticias.component.scss'
+  styleUrl: './noticias-noticias.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoticiasNoticiasComponent implements OnInit {
-  private newsService = inject(CurrencyService);
-  private platformId = inject(PLATFORM_ID);
+  private readonly newsService = inject(CurrencyService);
+  private readonly platformId = inject(PLATFORM_ID);
 
-  noticias = signal<any[]>([]);
-  carregando = signal(true);
-  exibirExplicacao = signal(false);
+  // TIPAGEM: Substituímos any[] pela interface Noticia
+  noticias = signal<Noticia[]>([]);
+  carregando = signal<boolean>(true);
+  exibirExplicacao = signal<boolean>(false);
 
-  // AJUSTE: Link direto para uma imagem genérica de finanças (Source Unsplash)
+  // AJUSTE: Link direto para uma imagem real (evita erro de carregamento)
   private readonly fallbackImg = 'https://unsplash.com';
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
-      this.carregarNoticiasSimuladas();
+      this.carregarNoticias();
     }
   }
 
-  toggleExplicacao() {
+  toggleExplicacao(): void {
     this.exibirExplicacao.update(v => !v);
   }
 
-  private carregarNoticiasSimuladas() {
+  private carregarNoticias(): void {
     this.newsService.getUltimasNoticias().subscribe({
-      next: (data) => {
+      next: (data: Noticia[]) => {
         this.noticias.set(data);
         this.carregando.set(false);
       },
-      error: () => this.carregando.set(false)
+      error: (err: Error) => {
+        console.error('Falha ao carregar notícias:', err.message);
+        this.carregando.set(false);
+      }
     });
   }
 
-  substituirImagemErro(event: Event) {
+  substituirImagemErro(event: Event): void {
     const img = event.target as HTMLImageElement;
-    // Evita loop infinito caso a imagem de fallback também falhe
     if (img.src !== this.fallbackImg) {
       img.src = this.fallbackImg;
     }

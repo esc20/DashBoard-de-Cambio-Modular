@@ -1,26 +1,56 @@
-import { Component, OnInit, inject, PLATFORM_ID, signal, effect } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID, signal, effect, ChangeDetectionStrategy } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import * as echarts from 'echarts';
-import { CurrencyService } from '../../currency.service'; 
+import { CurrencyService, MoedaExibicao } from '../../currency.service'; 
+import { EChartsOption, ECharts } from 'echarts';
+
+// --- INTERFACES DE CONTRATO (Padrão Sênior) ---
+
+interface PaisEstilizado {
+  name: string;
+  selected?: boolean;
+  itemStyle: {
+    areaColor: string;
+    borderColor: string;
+    borderWidth: number;
+    shadowBlur: number;
+    shadowColor: string;
+    opacity: number;
+  };
+}
+
+interface GeoJsonFeature {
+  properties: {
+    name: string;
+  };
+}
+
+interface GeoJsonData {
+  features: GeoJsonFeature[];
+}
 
 @Component({
   selector: 'app-mapa-mundi',
   standalone: true,
   imports: [CommonModule, NgxEchartsDirective],
   templateUrl: './mapa-mundi.component.html',
-  styleUrl: './mapa-mundi.component.scss'
+  styleUrl: './mapa-mundi.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapaMundiComponent implements OnInit {
   private http = inject(HttpClient);
   private platformId = inject(PLATFORM_ID);
   private currencyService = inject(CurrencyService); 
 
-  chartOptions: any = {};
+  // TIPAGEM: chartOptions agora segue o contrato oficial do ECharts
+  chartOptions = signal<EChartsOption>({});
   isBrowser = signal(false);
   exibirExplicacao = signal(false);
-  private echartsInstance: any; 
+  
+  // TIPAGEM: Instância do ECharts tipada (ECharts em vez de any)
+  private echartsInstance?: ECharts; 
 
   constructor() {
     effect(() => {
@@ -35,10 +65,9 @@ export class MapaMundiComponent implements OnInit {
       if (trigger > 0 && this.echartsInstance) {
         const paisEncontrado = this.focarNoPais(busca);
         
-        if (paisEncontrado) {
+        if (paisEncontrado && isPlatformBrowser(this.platformId)) {
           const elementoMapa = document.querySelector('.map-row');
           elementoMapa?.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          
           elementoMapa?.classList.add('highlight-search');
           setTimeout(() => elementoMapa?.classList.remove('highlight-search'), 2000);
         }
@@ -46,15 +75,14 @@ export class MapaMundiComponent implements OnInit {
     });
   }
 
-  toggleExplicacao() {
+  toggleExplicacao(): void {
     this.exibirExplicacao.update(v => !v);
   }
 
-  onChartInit(ec: any) {
+  onChartInit(ec: ECharts): void {
     this.echartsInstance = ec;
-    // Pequeno delay para garantir que o container do mapa tenha tamanho real no DOM
     setTimeout(() => {
-      this.echartsInstance.resize();
+      this.echartsInstance?.resize();
       const moedasAtuais = this.currencyService.listaMoedas();
       if (moedasAtuais.length > 0) {
         this.atualizarCoresDoMapa(moedasAtuais);
@@ -62,18 +90,15 @@ export class MapaMundiComponent implements OnInit {
     }, 200);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.isBrowser.set(true);
       
-      // CAMINHO AJUSTADO: Usamos './data/world.json' para garantir que a Vercel 
-      // encontre o arquivo na pasta de assets/public
-      this.http.get('./data/world.json').subscribe({
-        next: (geoJson: any) => {
-          echarts.registerMap('world', geoJson);
+      this.http.get<GeoJsonData>('./data/world.json').subscribe({
+        next: (geoJson) => {
+          echarts.registerMap('world', geoJson as any); // registerMap ainda exige cast dependendo da versão
           this.configurarMapaInicial();
           
-          // Força a pintura inicial das cores neon
           setTimeout(() => {
             const moedas = this.currencyService.listaMoedas();
             if (moedas.length > 0) this.atualizarCoresDoMapa(moedas);
@@ -85,46 +110,34 @@ export class MapaMundiComponent implements OnInit {
   }
 
   private focarNoPais(nomeOriginal: string): boolean {
-    const dicionario: { [key: string]: string } = {
-      'brasil': 'Brazil',
-      'brazil': 'Brazil',
-      'eua': 'United States of America',
-      'usa': 'United States of America',
-      'estados unidos': 'United States of America',
-      'china': 'China',
-      'japão': 'Japan',
-      'japao': 'Japan',
-      'frança': 'France',
-      'alemanha': 'Germany',
-      'reino unido': 'United Kingdom',
-      'rússia': 'Russia',
-      'israel': 'Israel',
-      'ucrânia': 'Ukraine',
-      'irã': 'Iran'
+    const dicionario: Record<string, string> = {
+      'brasil': 'Brazil', 'brazil': 'Brazil',
+      'eua': 'United States of America', 'usa': 'United States of America',
+      'estados unidos': 'United States of America', 'china': 'China',
+      'japão': 'Japan', 'japao': 'Japan', 'frança': 'France',
+      'alemanha': 'Germany', 'reino unido': 'United Kingdom',
+      'rússia': 'Russia', 'israel': 'Israel', 'ucrânia': 'Ukraine', 'irã': 'Iran'
     };
 
     const nomeBusca = nomeOriginal.toLowerCase().trim();
     const nomeTraduzido = dicionario[nomeBusca] || nomeOriginal;
 
     const geoData = echarts.getMap('world');
-    if (!geoData) return false;
+    if (!geoData || !this.echartsInstance) return false;
 
-    const existeNoMapa = geoData.geoJSON.features.some(
-      (f: any) => f.properties.name.toLowerCase() === nomeTraduzido.toLowerCase()
+    // TIPAGEM: f agora é GeoJsonFeature
+    const existeNoMapa = (geoData.geoJSON as GeoJsonData).features.some(
+      (f) => f.properties.name.toLowerCase() === nomeTraduzido.toLowerCase()
     );
 
     if (existeNoMapa) {
       this.echartsInstance.dispatchAction({ type: 'geoUnSelect' });
-      this.echartsInstance.dispatchAction({
-        type: 'geoSelect',
-        name: nomeTraduzido
-      });
+      this.echartsInstance.dispatchAction({ type: 'geoSelect', name: nomeTraduzido });
 
       this.echartsInstance.setOption({
         series: [{
           name: 'world',
           zoom: 4,
-          center: undefined, 
           data: [
             ...this.gerarDadosMapa(this.currencyService.listaMoedas()),
             { name: nomeTraduzido, selected: true }
@@ -136,17 +149,17 @@ export class MapaMundiComponent implements OnInit {
     return false;
   }
 
-  ajustarZoom(fator: number) {
+  ajustarZoom(fator: number): void {
     if (this.echartsInstance) {
-      const options = this.echartsInstance.getOption();
-      const currentZoom = (options as any).series[0].zoom || 1;
+      const options = this.echartsInstance.getOption() as any;
+      const currentZoom = options.series[0].zoom || 1;
       this.echartsInstance.setOption({
         series: [{ zoom: Math.min(Math.max(currentZoom * fator, 1), 5) }]
       });
     }
   }
 
-  resetarMapa() {
+  resetarMapa(): void {
     if (this.echartsInstance) {
       this.echartsInstance.setOption({ 
         series: [{ 
@@ -158,8 +171,8 @@ export class MapaMundiComponent implements OnInit {
     }
   }
 
-  configurarMapaInicial() {
-    this.chartOptions = {
+  configurarMapaInicial(): void {
+    this.chartOptions.set({
       backgroundColor: 'transparent',
       tooltip: {
         trigger: 'item',
@@ -182,10 +195,10 @@ export class MapaMundiComponent implements OnInit {
         },
         data: [] 
       }]
-    };
+    });
   }
 
-  private estilizarPais(nome: string, subiu: boolean) {
+  private estilizarPais(nome: string, subiu: boolean): PaisEstilizado {
     const corNeon = subiu ? '#00ff88' : '#ff4444';
     const brilhoNeon = subiu ? 'rgba(0, 255, 136, 0.7)' : 'rgba(255, 68, 68, 0.7)';
 
@@ -202,7 +215,7 @@ export class MapaMundiComponent implements OnInit {
     };
   }
 
-  private gerarDadosMapa(moedas: any[]) {
+  private gerarDadosMapa(moedas: MoedaExibicao[]): PaisEstilizado[] {
     const dadosApi = moedas.map(m => {
       let nomeJSON = '';
       if (m.sigla === 'BRL') nomeJSON = 'Brazil';
@@ -214,9 +227,9 @@ export class MapaMundiComponent implements OnInit {
 
       const subiu = m.valor < m.anterior;
       return nomeJSON ? this.estilizarPais(nomeJSON, subiu) : null;
-    }).filter(d => d !== null);
+    }).filter((d): d is PaisEstilizado => d !== null);
 
-    const dadosConflito = [
+    const dadosConflito: PaisEstilizado[] = [
       this.estilizarPais('Russia', false),
       this.estilizarPais('Iran', false),
       this.estilizarPais('Israel', true),
@@ -226,7 +239,7 @@ export class MapaMundiComponent implements OnInit {
     return [...dadosApi, ...dadosConflito];
   }
 
-  private atualizarCoresDoMapa(moedas: any[]) {
+  private atualizarCoresDoMapa(moedas: MoedaExibicao[]): void {
     if (!this.echartsInstance) return;
     this.echartsInstance.setOption({
       series: [{

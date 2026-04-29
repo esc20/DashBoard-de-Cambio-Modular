@@ -1,37 +1,43 @@
-import { Component, OnInit, inject, PLATFORM_ID, signal } from '@angular/core';
+import { Component, OnInit, inject, PLATFORM_ID, signal, ChangeDetectionStrategy } from '@angular/core';
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { NgxEchartsModule } from 'ngx-echarts'; 
 import { EChartsOption } from 'echarts';
+
+// INTERFACE PARA OS DADOS DO FLUXO (Padrão Sênior: Nomear as estruturas de dados)
+interface AtivoFluxo {
+  name: string;
+  value: number;
+}
 
 @Component({
   selector: 'app-fluxo-ativos',
   standalone: true,
   imports: [CommonModule, NgxEchartsModule],
   templateUrl: './fluxo-ativos.component.html',
-  styleUrl: './fluxo-ativos.component.scss'
+  styleUrl: './fluxo-ativos.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FluxoAtivosComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   
-  // Signals de Estado
   chartOptions = signal<EChartsOption | null>(null);
   isBrowser = signal(false);
-  exibirExplicacao = signal(false); // Controle do ícone de info
+  exibirExplicacao = signal(false);
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.isBrowser.set(true);
       this.configurarGrafico();
     }
   }
 
-  // Métodos de Ação do Usuário
-  toggleExplicacao() {
+  toggleExplicacao(): void {
     this.exibirExplicacao.update(v => !v);
   }
 
-  configurarGrafico() {
-    const dados = [
+  configurarGrafico(): void {
+    // Tipagem forte para o array de dados
+    const dados: AtivoFluxo[] = [
       { name: 'S&P 500', value: 12.5 },
       { name: 'Ouro', value: 8.2 },
       { name: 'Petróleo', value: -5.4 },
@@ -53,6 +59,7 @@ export class FluxoAtivosComponent implements OnInit {
       },
       series: [{
         type: 'bar',
+        // O map agora é tipado automaticamente pelo AtivoFluxo
         data: dados.map(d => ({
           value: d.value,
           itemStyle: {

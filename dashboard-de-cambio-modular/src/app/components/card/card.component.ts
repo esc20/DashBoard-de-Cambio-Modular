@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule, DecimalPipe, isPlatformBrowser } from '@angular/common';
 import { timer, switchMap, retry, catchError, of } from 'rxjs';
-import { CurrencyService, MoedaExibicao } from '../../currency.service'; 
+import { CurrencyService, MoedaExibicao, ExchangeRateResponse } from '../../currency.service'; 
 
 @Component({
   selector: 'app-card',
@@ -21,7 +21,6 @@ export class CardComponent implements OnInit {
   ultimaAtualizacao = signal<string>('---');
   exibirExplicacao = signal(false);
   
-  // SIGNAL PARA O CONVERSOR DINÂMICO
   valorParaConverter = signal<number>(1);
 
   private moedasConfig = [
@@ -39,11 +38,9 @@ export class CardComponent implements OnInit {
     }
   }
 
-  // FUNÇÃO DO CONVERSOR
   atualizarValorConversao(event: Event) {
     const input = event.target as HTMLInputElement;
     const valor = parseFloat(input.value);
-    // Se o input estiver vazio ou não for número, define como 0 para não quebrar o cálculo
     this.valorParaConverter.set(isNaN(valor) ? 0 : valor);
   }
 
@@ -52,7 +49,10 @@ export class CardComponent implements OnInit {
   }
 
   getFlagCode(sigla: string): string {
-    const map: any = { 'BRL': 'br', 'USD': 'us', 'EUR': 'eu', 'GBP': 'gb', 'JPY': 'jp', 'CNY': 'cn' };
+    // TIPAGEM: Definimos o Record para evitar o 'any' no mapa de bandeiras
+    const map: Record<string, string> = { 
+      'BRL': 'br', 'USD': 'us', 'EUR': 'eu', 'GBP': 'gb', 'JPY': 'jp', 'CNY': 'cn' 
+    };
     return map[sigla] || 'un';
   }
 
@@ -64,23 +64,29 @@ export class CardComponent implements OnInit {
     timer(0, 3600000).pipe(
       switchMap(() => this._currencyService.getRates().pipe(
         catchError(() => {
+          // TIPAGEM: Aqui tipamos o retorno do Mock para bater com a interface
           return of({
+            result: 'success',
+            base_code: 'USD',
+            time_last_update_utc: new Date().toUTCString(),
             conversion_rates: { 'BRL': 5.42, 'USD': 1.0, 'EUR': 0.92, 'GBP': 0.78, 'JPY': 156.0, 'CNY': 7.23 },
             isSimulado: true
-          });
+          } as ExchangeRateResponse & { isSimulado: boolean });
         })
       )),
       retry({ count: 2, delay: 5000 })
     ).subscribe({
-      next: (res: any) => {
-        this.processarDados(res.conversion_rates, res.isSimulado);
+      // TIPAGEM: Substituímos o 'any' pela interface que criamos no Service
+      next: (res: ExchangeRateResponse & { isSimulado?: boolean }) => {
+        this.processarDados(res.conversion_rates, res.isSimulado || false);
       }
     });
   }
 
-  private processarDados(taxas: any, isSimulado: boolean = false) {
+  // TIPAGEM: Definimos o formato do dicionário de taxas
+  private processarDados(taxas: Record<string, number>, isSimulado: boolean = false) {
     const cacheSalvo = localStorage.getItem('ultimas_taxas');
-    const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) : this.gerarTaxasAnterioresFake(taxas); 
+    const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) as Record<string, number> : this.gerarTaxasAnterioresFake(taxas); 
 
     const novasMoedas: MoedaExibicao[] = this.moedasConfig.map((cfg, index) => {
       const valorFinal = taxas[cfg.sigla] || 1;
@@ -114,8 +120,8 @@ export class CardComponent implements OnInit {
     }
   }
 
-  private gerarTaxasAnterioresFake(taxasAtuais: any) {
-    const fake: any = {};
+  private gerarTaxasAnterioresFake(taxasAtuais: Record<string, number>): Record<string, number> {
+    const fake: Record<string, number> = {};
     Object.keys(taxasAtuais).forEach((key, index) => {
         fake[key] = index % 2 === 0 ? taxasAtuais[key] * 1.002 : taxasAtuais[key] * 0.998;
     });

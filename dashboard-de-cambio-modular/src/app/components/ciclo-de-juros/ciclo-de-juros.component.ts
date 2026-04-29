@@ -1,6 +1,15 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule, DecimalPipe } from '@angular/common';
-import { CurrencyService } from '../../currency.service';
+import { CurrencyService, TaxaSelicResponse } from '../../currency.service'; // Importamos a Interface
+import { ChangeDetectionStrategy } from '@angular/core';
+
+// Interface interna para os cards de juros
+interface TaxaJuros {
+  pais: string;
+  sigla: string;
+  valor: number;
+  cor: string;
+}
 
 @Component({
   selector: 'app-ciclo-de-juros',
@@ -8,18 +17,18 @@ import { CurrencyService } from '../../currency.service';
   imports: [CommonModule],
   providers: [DecimalPipe],
   templateUrl: './ciclo-de-juros.component.html',
-  styleUrl: './ciclo-de-juros.component.scss'
+  styleUrl: './ciclo-de-juros.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CicloDeJurosComponent implements OnInit {
 
   private readonly _currencyService = inject(CurrencyService);
   private readonly _decimalPipe = inject(DecimalPipe);
 
-  // 1. SIGNAL PARA CONTROLE DO TOOLTIP
   exibirExplicacao = signal(false);
 
-  // Lista de juros com valores base (o Brasil será atualizado pela API)
-  taxas = signal([
+  // Tipamos o Signal com a interface TaxaJuros[]
+  taxas = signal<TaxaJuros[]>([
     { pais: 'Brasil', sigla: 'SELIC', valor: 0, cor: '#00ff88' },
     { pais: 'EUA', sigla: 'FED', valor: 5.50, cor: '#3b82f6' },
     { pais: 'Europa', sigla: 'BCE', valor: 4.50, cor: '#f59e0b' },
@@ -31,7 +40,6 @@ export class CicloDeJurosComponent implements OnInit {
     this.carregarJurosReais();
   }
 
-  // 2. MÉTODO PARA ALTERNAR O TOOLTIP (Útil para cliques no mobile)
   toggleExplicacao() {
     this.exibirExplicacao.update(valor => !valor);
   }
@@ -41,15 +49,16 @@ export class CicloDeJurosComponent implements OnInit {
   }
 
   private carregarJurosReais() {
+    // Tipamos o retorno do subscribe conforme a interface do Service
     this._currencyService.getTaxasJuros().subscribe({
-      next: (dados) => {
-        if (dados && dados.length > 0) {
-          const selicReal = parseFloat(dados[0].valor);
+      next: (dados: TaxaSelicResponse | { valor: string }) => {
+        if (dados && dados.valor) {
+          const selicReal = parseFloat(dados.valor);
           this.atualizarValorBrasil(selicReal);
         }
       },
-      error: (err) => {
-        console.error('Erro na API SELIC, usando valor fixo de segurança');
+      error: (err: Error) => {
+        console.error('Erro na API SELIC:', err.message);
         this.atualizarValorBrasil(10.75); 
       }
     });

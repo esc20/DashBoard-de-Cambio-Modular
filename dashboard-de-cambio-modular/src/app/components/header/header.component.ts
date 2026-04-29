@@ -15,16 +15,16 @@ export class HeaderComponent implements OnInit {
 
   exibirBusca = signal(false);
 
-  private readonly playlistImagens = [
+  private readonly playlistImagens: string[] = [
     'federico-velazco-MZ8xoIQU4WQ-unsplash.jpg',
     'matt-nelson-z4X3yABcf5g-unsplash.jpg',
     'takashi-miyazaki-64ajtpEzlYc-unsplash.jpg'
   ];
 
-  imagemAtual = signal(this.playlistImagens[0]);
-  index = 0;
+  imagemAtual = signal<string>(this.playlistImagens[0]);
+  private index = 0;
 
-  ngOnInit() {
+  ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       setInterval(() => {
         this.index = (this.index + 1) % this.playlistImagens.length;
@@ -33,32 +33,26 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  alternarBusca() {
+  alternarBusca(): void {
     this.exibirBusca.update(v => !v);
   }
 
-  dispararBusca(event: any) {
+  // TIPAGEM: Substituímos 'any' por 'Event'
+  dispararBusca(event: Event): void {
     const input = event.target as HTMLInputElement;
-    const termo = input.value.trim(); // Mantém o case original para o dicionário do mapa
+    const termo = input.value.trim();
 
     if (termo) {
-      // 1. Atualiza o termo de busca no serviço
       this.currencyService.termoBusca.set(termo);
-      
-      // 2. O PULO DO GATO: Atualiza com Timestamp para garantir que o 'effect' rode sempre
-      // Mesmo que o termo anterior seja igual ao atual (ex: Brasil -> Brasil)
       this.currencyService.triggerBusca.set(Date.now()); 
-
-      // 3. Tenta fazer scroll se for um nome de Card (convertendo para minúsculo para bater no dicionário)
       this.scrollParaElemento(termo.toLowerCase());
-
-      // 4. LIMPEZA IMEDIATA: Deixa o campo pronto para a próxima busca sem precisar de reload
       input.value = '';
     }
   }
 
-  private scrollParaElemento(termo: string) {
-    const dicionarioScroll: { [key: string]: string } = {
+  private scrollParaElemento(termo: string): void {
+    // TIPAGEM: Record é mais elegante que { [key: string]: string }
+    const dicionarioScroll: Record<string, string> = {
       'mapa': '.map-row',
       'noticias': '.col-noticias',
       'noticia': '.col-noticias',
@@ -75,7 +69,7 @@ export class HeaderComponent implements OnInit {
 
     const seletor = dicionarioScroll[termo];
     
-    if (seletor) {
+    if (seletor && isPlatformBrowser(this.platformId)) {
       const elemento = document.querySelector(seletor);
       if (elemento) {
         elemento.scrollIntoView({ behavior: 'smooth', block: 'center' });
