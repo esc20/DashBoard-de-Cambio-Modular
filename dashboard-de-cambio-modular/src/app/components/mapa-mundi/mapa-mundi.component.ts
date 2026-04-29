@@ -4,9 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { NgxEchartsDirective } from 'ngx-echarts';
 import * as echarts from 'echarts';
 import { CurrencyService, MoedaExibicao } from '../../currency.service'; 
-import { EChartsOption, ECharts } from 'echarts';
+import { EChartsOption } from 'echarts';
 
-// --- INTERFACES DE CONTRATO (Padrão Sênior) ---
+// --- INTERFACES DE CONTRATO ---
 
 interface PaisEstilizado {
   name: string;
@@ -44,13 +44,12 @@ export class MapaMundiComponent implements OnInit {
   private platformId = inject(PLATFORM_ID);
   private currencyService = inject(CurrencyService); 
 
-  // TIPAGEM: chartOptions agora segue o contrato oficial do ECharts
   chartOptions = signal<EChartsOption>({});
   isBrowser = signal(false);
   exibirExplicacao = signal(false);
   
-  // TIPAGEM: Instância do ECharts tipada (ECharts em vez de any)
-  private echartsInstance?: ECharts; 
+  // Tipagem usando o namespace para evitar conflitos de declaração privada
+  private echartsInstance?: echarts.ECharts; 
 
   constructor() {
     effect(() => {
@@ -79,8 +78,11 @@ export class MapaMundiComponent implements OnInit {
     this.exibirExplicacao.update(v => !v);
   }
 
-  onChartInit(ec: ECharts): void {
-    this.echartsInstance = ec;
+  // CORREÇÃO VERCEL: Usamos any no parâmetro para aceitar o evento do template 
+  // e fazemos o cast interno para estabilizar os tipos.
+  onChartInit(ec: any): void {
+    this.echartsInstance = ec as echarts.ECharts;
+    
     setTimeout(() => {
       this.echartsInstance?.resize();
       const moedasAtuais = this.currencyService.listaMoedas();
@@ -96,7 +98,7 @@ export class MapaMundiComponent implements OnInit {
       
       this.http.get<GeoJsonData>('./data/world.json').subscribe({
         next: (geoJson) => {
-          echarts.registerMap('world', geoJson as any); // registerMap ainda exige cast dependendo da versão
+          echarts.registerMap('world', geoJson as any); 
           this.configurarMapaInicial();
           
           setTimeout(() => {
@@ -125,7 +127,6 @@ export class MapaMundiComponent implements OnInit {
     const geoData = echarts.getMap('world');
     if (!geoData || !this.echartsInstance) return false;
 
-    // TIPAGEM: f agora é GeoJsonFeature
     const existeNoMapa = (geoData.geoJSON as GeoJsonData).features.some(
       (f) => f.properties.name.toLowerCase() === nomeTraduzido.toLowerCase()
     );
