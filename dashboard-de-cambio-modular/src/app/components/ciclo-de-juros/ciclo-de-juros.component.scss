@@ -14,7 +14,6 @@
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-// ESTILO DO TOOLTIP E ÍCONE (Padronizado)
 .info-container-top {
   position: absolute;
   top: 15px;
@@ -70,9 +69,9 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-// RESTANTE DO SEU SCSS
+
 .titulo {
-  font-size: 0.8rem; // Ajustado para não brigar com o ícone
+  font-size: 0.8rem; 
   text-transform: uppercase;
   margin-bottom: 20px;
   opacity: 0.8;

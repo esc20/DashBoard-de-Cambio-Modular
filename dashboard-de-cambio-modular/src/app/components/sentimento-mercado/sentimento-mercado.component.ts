@@ -8,7 +8,6 @@ import { CurrencyService, SentimentResponse, SentimentData } from '../../currenc
   imports: [CommonModule],
   templateUrl: './sentimento-mercado.component.html',
   styleUrl: './sentimento-mercado.component.scss',
-  // Pilar de Performance: OnPush
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SentimentoMercadoComponent implements OnInit {
@@ -21,7 +20,6 @@ export class SentimentoMercadoComponent implements OnInit {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       this.buscarDadosReais();
-      // Atualização a cada 30 minutos
       setInterval(() => this.buscarDadosReais(), 1800000);
     }
   }
@@ -31,7 +29,6 @@ export class SentimentoMercadoComponent implements OnInit {
   }
 
   private buscarDadosReais(): void {
-    // TIPAGEM FORTE: Usando a interface que definimos no Service
     this._currencyService.getMarketSentiment().subscribe({
       next: (res: SentimentResponse | { data: SentimentData[] }) => {
         if (res.data && res.data[0]) {

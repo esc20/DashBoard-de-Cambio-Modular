@@ -3,7 +3,6 @@ import { CommonModule, DecimalPipe } from '@angular/common';
 import { CurrencyService, TaxaSelicResponse } from '../../currency.service'; // Importamos a Interface
 import { ChangeDetectionStrategy } from '@angular/core';
 
-// Interface interna para os cards de juros
 interface TaxaJuros {
   pais: string;
   sigla: string;
@@ -27,7 +26,7 @@ export class CicloDeJurosComponent implements OnInit {
 
   exibirExplicacao = signal(false);
 
-  // Tipamos o Signal com a interface TaxaJuros[]
+
   taxas = signal<TaxaJuros[]>([
     { pais: 'Brasil', sigla: 'SELIC', valor: 0, cor: '#00ff88' },
     { pais: 'EUA', sigla: 'FED', valor: 5.50, cor: '#3b82f6' },
@@ -49,7 +48,6 @@ export class CicloDeJurosComponent implements OnInit {
   }
 
   private carregarJurosReais() {
-    // Tipamos o retorno do subscribe conforme a interface do Service
     this._currencyService.getTaxasJuros().subscribe({
       next: (dados: TaxaSelicResponse | { valor: string }) => {
         if (dados && dados.valor) {

@@ -49,7 +49,6 @@ export class CardComponent implements OnInit {
   }
 
   getFlagCode(sigla: string): string {
-    // TIPAGEM: Definimos o Record para evitar o 'any' no mapa de bandeiras
     const map: Record<string, string> = { 
       'BRL': 'br', 'USD': 'us', 'EUR': 'eu', 'GBP': 'gb', 'JPY': 'jp', 'CNY': 'cn' 
     };
@@ -64,7 +63,6 @@ export class CardComponent implements OnInit {
     timer(0, 3600000).pipe(
       switchMap(() => this._currencyService.getRates().pipe(
         catchError(() => {
-          // TIPAGEM: Aqui tipamos o retorno do Mock para bater com a interface
           return of({
             result: 'success',
             base_code: 'USD',
@@ -76,14 +74,13 @@ export class CardComponent implements OnInit {
       )),
       retry({ count: 2, delay: 5000 })
     ).subscribe({
-      // TIPAGEM: Substituímos o 'any' pela interface que criamos no Service
       next: (res: ExchangeRateResponse & { isSimulado?: boolean }) => {
         this.processarDados(res.conversion_rates, res.isSimulado || false);
       }
     });
   }
 
-  // TIPAGEM: Definimos o formato do dicionário de taxas
+  // TIPAGEM: formato do dicionário de taxas
   private processarDados(taxas: Record<string, number>, isSimulado: boolean = false) {
     const cacheSalvo = localStorage.getItem('ultimas_taxas');
     const taxasAnteriores = cacheSalvo ? JSON.parse(cacheSalvo) as Record<string, number> : this.gerarTaxasAnterioresFake(taxas); 

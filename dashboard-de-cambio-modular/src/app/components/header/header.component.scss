@@ -9,7 +9,7 @@ header {
   background-color: #050505; // Fundo caso a imagem demore a carregar
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 
-  // --- CONTÊINER DA IMAGEM ---
+  
   .image-container {
     position: absolute;
     top: 0; 
@@ -43,8 +43,6 @@ header {
     }
   }
 
-  // --- CONTEÚDO (LOGO E BUSCA) ---
-  // Forçamos o z-index para ficarem acima da imagem
   .logo, .search-container {
     position: relative;
     z-index: 2;
@@ -134,7 +132,7 @@ header {
   }
 }
 
-// ANIMAÇÕES
+
 @keyframes slow-zoom {
   from { transform: scale(1); }
   to { transform: scale(1.15); }

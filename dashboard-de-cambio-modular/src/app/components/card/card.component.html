@@ -1,5 +1,4 @@
 <div class="card-financeiro">
-  <!-- ÍCONE DE INFO PREMIUM (Padronizado) -->
   <div class="info-container-top" 
        (mouseenter)="exibirExplicacao.set(true)" 
        (mouseleave)="exibirExplicacao.set(false)"
@@ -18,7 +17,7 @@
     <h2 class="card-title">Câmbio Real-Time</h2>        
   </div>
 
-  <!-- INPUT DE CONVERSÃO DINÂMICA -->
+
   <div class="conversor-input-group">
     <span class="prefix">USD</span>
     <input type="number" 
@@ -27,7 +26,7 @@
            placeholder="Valor para converter...">
   </div>
 
-  <!-- CONTAINER DA LISTA (Ocupa o espaço central) -->
+  
   <div class="lista-moedas-container">
     @for (moeda of listaMoedas(); track moeda.sigla) {
       <div class="linha-moeda">
@@ -42,12 +41,12 @@
           <span class="sigla">{{ moeda.sigla }}</span>
         </div>
 
-        <!-- O VALOR MULTIPLICADO PELO INPUT (REATIVIDADE) -->
+        
         <div class="valor">
           {{ formatarValor(moeda.valor * valorParaConverter()) }}
         </div>
         
-        <!-- PONTO DE LUZ COM LÓGICA DE TENDÊNCIA -->
+      
         <div class="ponto-luz" 
              [class.subindo]="moeda.valor < moeda.anterior" 
              [class.caindo]="moeda.valor > moeda.anterior">

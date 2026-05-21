@@ -11,10 +11,10 @@
   
   display: flex;
   flex-direction: column;
-  position: relative; // Essencial para o ícone
+  position: relative; 
   overflow: hidden;
 
-  // PADRÃO DE INFO ICON E TOOLTIP
+  
   .info-container-top {
     position: absolute;
     top: 15px;
@@ -40,7 +40,7 @@
       transition: all 0.3s ease;
 
       &:hover {
-        background: rgba(0, 229, 255, 0.1); // Brilho azul para combinar com este card
+        background: rgba(0, 229, 255, 0.1); 
         border-color: #00e5ff;
         color: #00e5ff;
         box-shadow: 0 0 10px rgba(0, 229, 255, 0.3);
@@ -68,7 +68,7 @@
   .header {
     margin-bottom: 20px;
     h3 {
-      font-size: 0.85rem; // Reduzi um pouco para não bater no ícone
+      font-size: 0.85rem; 
       color: white;
       text-transform: uppercase;
       letter-spacing: 1px;

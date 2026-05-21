@@ -37,7 +37,7 @@ export class HeaderComponent implements OnInit {
     this.exibirBusca.update(v => !v);
   }
 
-  // TIPAGEM: Substituímos 'any' por 'Event'
+ 
   dispararBusca(event: Event): void {
     const input = event.target as HTMLInputElement;
     const termo = input.value.trim();

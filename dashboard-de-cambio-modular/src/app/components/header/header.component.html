@@ -1,11 +1,10 @@
 <header>
-  <!-- CAMADA 1: BACKGROUND -->
   <div class="image-container" [style.backgroundImage]="'url(' + imagemAtual() + ')'">
     <div class="overlay-gradient"></div>
     <div class="scanline-effect"></div>
   </div>
 
-  <!-- CAMADA 2: CONTEÚDO -->
+
   <div class="logo">
     <div class="logo-icon">
       <div class="bar bar-1"></div>
@@ -20,7 +19,6 @@
 
   <div class="search-container" [class.aberto]="exibirBusca()">
     <div class="search-bar">
-      <!-- O input agora dispara a busca ao apertar ENTER -->
       <input type="text" 
              placeholder="BUSCAR PAÍS..." 
              (keyup.enter)="dispararBusca($event)">

@@ -3,7 +3,6 @@ import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { NgxEchartsModule } from 'ngx-echarts'; 
 import { EChartsOption } from 'echarts';
 
-// INTERFACE PARA OS DADOS DO FLUXO (Padrão Sênior: Nomear as estruturas de dados)
 interface AtivoFluxo {
   name: string;
   value: number;
@@ -59,7 +58,6 @@ export class FluxoAtivosComponent implements OnInit {
       },
       series: [{
         type: 'bar',
-        // O map agora é tipado automaticamente pelo AtivoFluxo
         data: dados.map(d => ({
           value: d.value,
           itemStyle: {
