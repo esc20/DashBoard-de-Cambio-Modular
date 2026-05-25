@@ -6,8 +6,6 @@ import * as echarts from 'echarts';
 import { CurrencyService, MoedaExibicao } from '../../currency.service'; 
 import { EChartsOption } from 'echarts';
 
-// --- INTERFACES DE CONTRATO ---
-
 interface PaisEstilizado {
   name: string;
   selected?: boolean;
@@ -48,7 +46,6 @@ export class MapaMundiComponent implements OnInit {
   isBrowser = signal(false);
   exibirExplicacao = signal(false);
   
-  // Tipagem usando o namespace para evitar conflitos de declaração privada
   private echartsInstance?: echarts.ECharts; 
 
   constructor() {
@@ -78,8 +75,6 @@ export class MapaMundiComponent implements OnInit {
     this.exibirExplicacao.update(v => !v);
   }
 
-  // CORREÇÃO VERCEL: Usamos any no parâmetro para aceitar o evento do template 
-  // e fazemos o cast interno para estabilizar os tipos.
   onChartInit(ec: any): void {
     this.echartsInstance = ec as echarts.ECharts;
     

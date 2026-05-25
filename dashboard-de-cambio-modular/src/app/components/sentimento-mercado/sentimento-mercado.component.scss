@@ -13,7 +13,6 @@
    border: 1px solid rgba(255, 255, 255, 0.05);
    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 
-   // PADRÃO DE INFO ICON E TOOLTIP (Ajustado para Amarelo/Ouro)
    .info-container-top {
     position: absolute;
     top: 15px;
@@ -76,7 +75,7 @@
 
 .gauge-svg-container {
   position: relative;
-  width: 160px; // Reduzi um pouco para dar ar ao layout
+  width: 160px; 
   height: 160px;
   display: flex;
   justify-content: center;

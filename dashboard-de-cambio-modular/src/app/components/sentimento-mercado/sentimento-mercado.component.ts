@@ -1,6 +1,6 @@
-import { Component, signal, inject, OnInit, PLATFORM_ID, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { CurrencyService, SentimentResponse, SentimentData } from '../../currency.service';
+import { Component, signal, inject, OnInit, computed, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { CurrencyService } from '../../currency.service';
 
 @Component({
   selector: 'app-sentimento-mercado',
@@ -10,34 +10,26 @@ import { CurrencyService, SentimentResponse, SentimentData } from '../../currenc
   styleUrl: './sentimento-mercado.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SentimentoMercadoComponent implements OnInit {
-  private readonly platformId = inject(PLATFORM_ID);
+export class SentimentoMercadoComponent {
   private readonly _currencyService = inject(CurrencyService);
 
-  valorSentimento = signal<number>(0); 
   exibirExplicacao = signal<boolean>(false);
+  valorSentimento = computed<number>(() => {
+    const moedas = this._currencyService.listaMoedas();
+    if (moedas.length === 0) return 50; 
 
-  ngOnInit(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      this.buscarDadosReais();
-      setInterval(() => this.buscarDadosReais(), 1800000);
-    }
-  }
+    // Conta quantas moedas estão valorizando contra o Dólar 
+    // (na nossa lógica do card: se valor atual < valor anterior, a moeda subiu e o USD caiu)
+    const moedasEmAlta = moedas.filter(m => m.valor < m.anterior).length;
+    
+    // Converte a proporção de alta em uma escala de 0 a 100
+    const percentualAlta = (moedasEmAlta / moedas.length) * 100;
+    
+    return Math.round(percentualAlta);
+  });
 
   toggleExplicacao(): void {
     this.exibirExplicacao.update(v => !v);
-  }
-
-  private buscarDadosReais(): void {
-    this._currencyService.getMarketSentiment().subscribe({
-      next: (res: SentimentResponse | { data: SentimentData[] }) => {
-        if (res.data && res.data[0]) {
-          const valorApi = Number(res.data[0].value);
-          this.valorSentimento.set(valorApi);
-        }
-      },
-      error: (err: Error) => console.error('Erro ao buscar sentimento:', err.message)
-    });
   }
 
   calcularOffset(): number {
@@ -49,17 +41,17 @@ export class SentimentoMercadoComponent implements OnInit {
   obterCorStatus(): string {
     const v = this.valorSentimento();
     if (v === 0) return 'rgba(255,255,255,0.2)';
-    if (v < 30) return '#ff4444'; 
-    if (v < 60) return '#ffff00'; 
-    return '#00ff88'; 
+    if (v < 35) return '#ff4444'; // Medo
+    if (v < 65) return '#ffff00'; // Neutro
+    return '#00ff88'; // Ganância
   }
 
   obterStatusTexto(): string {
     const v = this.valorSentimento();
-    if (v < 30) return 'Medo Extremo';
+    if (v < 20) return 'Medo Extremo';
     if (v < 45) return 'Medo';
     if (v < 55) return 'Neutro';
-    if (v < 75) return 'Ganância';
+    if (v < 80) return 'Ganância';
     return 'Ganância Extrema';
   }
 }

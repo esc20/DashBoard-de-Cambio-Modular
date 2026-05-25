@@ -1,23 +1,16 @@
 :root {
-  /* Paleta Dark OLED */
   --bg-puro: #050505;
   --bg-card: rgba(25, 25, 25, 0.95);
-  
-  /* Cores Neon Estratégicas */
   --neon-verde: #00ff88;
   --neon-vermelho: #ff4444;
   --neon-azul: #00e5ff;
-  
-  /* Tipografia e Bordas */
   --text-principal: #ffffff;
   --text-secundario: rgba(255, 255, 255, 0.6);
   --border-sutil: rgba(255, 255, 255, 0.05);
-  
-  /* Sombra Padrão para os Cards */
   --shadow-premium: 0 10px 40px rgba(0, 0, 0, 0.8);
 }
 
-/* Reset Global */
+
 html, body {
   margin: 0;
   padding: 0;

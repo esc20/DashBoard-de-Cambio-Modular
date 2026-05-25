@@ -1,9 +1,8 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-// INTERFACE DE CONTRATO (Padrão Sênior: Define o que é um Alerta)
 interface AlertaGeopolitico {
-  status: 'CRÍTICO' | 'ATENÇÃO' | 'MONITORANDO'; // Literal types para segurança extra
+  status: 'CRÍTICO' | 'ATENÇÃO' | 'MONITORANDO'; 
   local: string;
   desc: string;
   cor: string;
@@ -15,13 +14,11 @@ interface AlertaGeopolitico {
   imports: [CommonModule],
   templateUrl: './monitor-geopolitico.component.html',
   styleUrl: './monitor-geopolitico.component.scss',
-  // Adicionado OnPush para manter a consistência de performance
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MonitorGeopoliticoComponent {
   exibirExplicacao = signal<boolean>(false);
 
-  // Signal tipado com a interface criada
   alertas = signal<AlertaGeopolitico[]>([
     { 
       status: 'CRÍTICO', 

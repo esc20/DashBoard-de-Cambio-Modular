@@ -14,12 +14,12 @@ export class NoticiasNoticiasComponent implements OnInit {
   private readonly newsService = inject(CurrencyService);
   private readonly platformId = inject(PLATFORM_ID);
 
-  // TIPAGEM: Substituímos any[] pela interface Noticia
+
   noticias = signal<Noticia[]>([]);
   carregando = signal<boolean>(true);
   exibirExplicacao = signal<boolean>(false);
 
-  // AJUSTE: Link direto para uma imagem real (evita erro de carregamento)
+  
   private readonly fallbackImg = 'https://unsplash.com';
 
   ngOnInit(): void {

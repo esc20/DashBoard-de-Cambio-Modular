@@ -12,14 +12,14 @@ describe('CurrencyService', () => {
       providers: [
         CurrencyService,
         provideHttpClient(),
-        provideHttpClientTesting() // Simula o back-end para o teste ser rápido e isolado
+        provideHttpClientTesting() 
       ]
     });
     service = TestBed.inject(CurrencyService);
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  // Garante que não fiquem requisições abertas após cada teste
+  
   afterEach(() => {
     httpMock.verify();
   });
@@ -39,11 +39,9 @@ describe('CurrencyService', () => {
       expect(res.conversion_rates['EUR']).toBe(0.92);
     });
 
-    // Intercepta a chamada para a URL da API (usando a propriedade privada via string para o TS não reclamar)
+    
     const req = httpMock.expectOne((service as any).apiUrl);
     expect(req.request.method).toBe('GET');
-    
-    // Responde com os dados fake
     req.flush(mockResponse);
   });
 
@@ -51,7 +49,7 @@ describe('CurrencyService', () => {
     service.getUltimasNoticias().subscribe(noticias => {
       expect(noticias.length).toBeGreaterThan(0);
       expect(noticias[0].title).toBeDefined();
-      done(); // Avisa o Jasmine que o teste assíncrono terminou
+      done(); 
     });
   });
 });

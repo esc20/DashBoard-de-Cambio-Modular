@@ -1,6 +1,5 @@
 <div class="card-mapa">
   <div class="header-mapa">
-    <!-- NOVO ÍCONE DE INFO PREMIUM -->
     <div class="info-container-top" 
          (mouseenter)="exibirExplicacao.set(true)" 
          (mouseleave)="exibirExplicacao.set(false)"
@@ -28,7 +27,7 @@
     <div class="mapa-container">
       @if (isBrowser()) {
         <div echarts 
-             [options]="chartOptions" 
+             [options]="chartOptions()" 
              [autoResize]="true"
              (chartInit)="onChartInit($event)">
         </div>

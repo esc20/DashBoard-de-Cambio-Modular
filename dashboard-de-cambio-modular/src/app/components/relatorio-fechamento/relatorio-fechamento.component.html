@@ -1,5 +1,4 @@
 <div class="card-relatorio">
-  <!-- ÍCONE DE INFO PREMIUM -->
   <div class="info-container-top" 
        (mouseenter)="exibirExplicacao.set(true)" 
        (mouseleave)="exibirExplicacao.set(false)"
@@ -20,7 +19,6 @@
   </div>
 
   @if (relatorio()) {
-    <!-- Removida a div 'conteudo' para o Flexbox do card gerenciar os espaços diretamente -->
     <div class="status-geral">
       <span class="label">Sentimento Geral:</span>
       <span class="valor" [class.otimista]="relatorio()?.climaMercado === 'Otimista'">

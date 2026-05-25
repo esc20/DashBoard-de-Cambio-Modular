@@ -4,15 +4,13 @@
   min-height: 400px;
   background: rgba(25, 25, 25, 0.95);
   border-radius: 20px;
-  padding: 30px; // Aumentado para preencher melhor as bordas
+  padding: 30px; 
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
   color: white;
   display: flex;
   flex-direction: column;
   position: relative;
-  
-  // DISTRIBUIÇÃO ELÁSTICA: Garante que topo, meio e fundo se afastem
   justify-content: space-between;
 
   .info-container-top {
@@ -77,30 +75,30 @@
     margin-bottom: 20px;
     .label { font-size: 0.85rem; opacity: 0.6; display: block; margin-bottom: 5px; }
     .valor { 
-      font-size: 2.2rem; // Aumentado para ocupar volume visual no topo
+      font-size: 2.2rem; 
       font-weight: bold; 
       color: #ff4444; 
       &.otimista { color: #00ff88; text-shadow: 0 0 15px rgba(0, 255, 136, 0.3); }
     }
   }
 
-  // O BLOCO CENTRAL QUE ESTICA (A CHAVE DO PROBLEMA)
+
   .destaques {
-    flex: 1; // Age como uma mola: ocupa todo o espaço que sobrar no meio
+    flex: 1; 
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
     margin-bottom: 25px;
-    align-content: center; // Centraliza os itens verticalmente dentro do espaço extra
+    align-content: center; 
 
     .item {
       background: rgba(255, 255, 255, 0.04);
-      padding: 20px; // Mais padding para "encher" as caixas
+      padding: 20px; 
       border-radius: 15px;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      min-height: 90px; // Garante volume mínimo
+      min-height: 90px; 
 
       .label { font-size: 0.7rem; opacity: 0.5; display: block; margin-bottom: 8px; }
       .moeda-info { 
@@ -116,7 +114,7 @@
   }
 
   .resumo-texto {
-    flex-shrink: 0; // Não deixa o resumo ser esmagado
+    flex-shrink: 0; 
     font-size: 0.9rem;
     line-height: 1.6;
     opacity: 0.9;

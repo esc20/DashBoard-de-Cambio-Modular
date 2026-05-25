@@ -13,7 +13,6 @@ import { MonitorGeopoliticoComponent } from './components/monitor-geopolitico/mo
 @Component({
   selector: 'app-root',
   standalone: true,
-  // Organizei os imports para facilitar a leitura
   imports: [
     CommonModule, 
     HeaderComponent,
@@ -30,5 +29,5 @@ import { MonitorGeopoliticoComponent } from './components/monitor-geopolitico/mo
   styleUrl: './app.component.scss'
 })
 export class AppComponent {
-  title = 'Global Flow Terminal'; // Mudei para um nome mais "Premium" condizente com o design
+  title = 'Global Flow Terminal';
 }

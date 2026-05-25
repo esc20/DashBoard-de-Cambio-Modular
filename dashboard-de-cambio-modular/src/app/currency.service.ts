@@ -3,8 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { catchError, Observable, of, timeout, retry, map } from 'rxjs';
 import { environment } from '../environments';
 
-// --- INTERFACES DE MODELO (O "Coração" do Padrão Sênior) ---
-
 export interface MoedaExibicao {
   nome: string;
   sigla: string;
