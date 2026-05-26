@@ -6,7 +6,7 @@ Plataforma integrada de monitoramento financeiro e geopolítico global desenvolv
 
 ## Demonstração Visual
 
-[GIF demonstrativo em desenvolvimento - Será adicionado na próxima atualização do repositório]
+![Interface do Global Flow Terminal](dashboard-de-cambio-modular/assets/global-flow-demo.gif)
 
 ---
 

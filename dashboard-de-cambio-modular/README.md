@@ -2,7 +2,7 @@ Global Flow Terminal - Dashboard Financeiro e geopolítico
 Plataforma integrada de monitoramento financeiro e geopolítico global desenvolvida com Angular 18+. O sistema consolida múltiplos indicadores de mercado em tempo real através de uma arquitetura modular baseada em Standalone Components, aplicando técnicas avançadas de estilização assimétrica, controle estrito de hidratação, processamento estatístico de dados e responsividade fluida para telas de alta densidade e dispositivos móveis.
 
 Demonstração Visual
- ![Interface do Global Flow Terminal](assets/global-flow-demo.gif)
+![Interface do Global Flow Terminal](dashboard-de-cambio-modular/assets/global-flow-demo.gif)
 
 Engenharia de Software e Diferenciais Técnicos
 O desenvolvimento do terminal priorizou práticas rigorosas de governança de código, desacoplamento de camadas e otimização de runtime para aplicações de grande porte no ecossistema Angular:
