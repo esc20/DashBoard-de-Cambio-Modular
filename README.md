@@ -128,6 +128,16 @@ A plataforma incorpora um mecanismo automatizado de síntese e inteligência ana
 
 ---
 
+## Indicadores de Auditoria e Desempenho (Performance & Quality Metrics)
+
+A plataforma foi submetida à auditoria oficial do Google Lighthouse na simulação para dispositivos móveis, apresentando os seguintes indicadores de qualidade de software:
+
+* **Acessibilidade (96/100)**: Elevado índice de conformidade com as diretrizes da WCAG, garantindo semântica correta de tags, contrastes adequados e navegação acessível.
+* **Melhores Práticas (96/100)**: Código em conformidade estrita com os padrões modernos de segurança da Web API, uso de conexões seguras (HTTPS) e ausência de APIs legadas ou depreciadas.
+* **SEO (83/100)**: Estruturação otimizada de metadados, títulos e viewport para indexação automatizada em motores de busca.
+
+---
+
 ## Instruções para Execução do Projeto
 
 Por utilizar uma estrutura modular moderna em Angular, a aplicação necessita do ecossistema Node.js instalado na máquina:
