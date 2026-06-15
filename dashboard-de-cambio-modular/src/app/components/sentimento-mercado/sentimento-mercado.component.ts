@@ -18,11 +18,8 @@ export class SentimentoMercadoComponent {
     const moedas = this._currencyService.listaMoedas();
     if (moedas.length === 0) return 50; 
 
-    // Conta quantas moedas estão valorizando contra o Dólar 
-    // (na nossa lógica do card: se valor atual < valor anterior, a moeda subiu e o USD caiu)
     const moedasEmAlta = moedas.filter(m => m.valor < m.anterior).length;
     
-    // Converte a proporção de alta em uma escala de 0 a 100
     const percentualAlta = (moedasEmAlta / moedas.length) * 100;
     
     return Math.round(percentualAlta);

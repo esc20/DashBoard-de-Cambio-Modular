@@ -20,7 +20,6 @@ export class CardComponent implements OnInit {
   listaMoedas = signal<MoedaExibicao[]>([]);
   ultimaAtualizacao = signal<string>('---');
   exibirExplicacao = signal(false);
-  
   valorParaConverter = signal<number>(1);
 
   private moedasConfig = [

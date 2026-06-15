@@ -51,7 +51,6 @@ export class HeaderComponent implements OnInit {
   }
 
   private scrollParaElemento(termo: string): void {
-    // TIPAGEM: Record é mais elegante que { [key: string]: string }
     const dicionarioScroll: Record<string, string> = {
       'mapa': '.map-row',
       'noticias': '.col-noticias',
