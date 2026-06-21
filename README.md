@@ -57,20 +57,6 @@ Toda a parte de dados fica em um serviço centralizado. Esse motor foi feito par
 
 ---
 
-### COMO EXECUTAR O PROJETO
+### Site APEX-INVEST
 
-O projeto usa o ecossistema Angular CLI e exige o ambiente Node.js configurado no seu computador:
-
-1. Clone o repositório utilizando o comando:
-   ```bash
-   git clone https://github.com
-   ```
-2. Instale as dependências e pacotes do projeto:
-   ```bash
-   npm install
-   ```
-3. Inicialize o servidor de desenvolvimento local:
-   ```bash
-   ng serve
-   ```
-4. Acesse a aplicação no seu navegador pelo endereço: `http://localhost:4200`
+[Clique aqui para acessar o projeto online](https://dash-board-de-cambio-modular-vj2s.vercel.app/)
